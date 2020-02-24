@@ -8,10 +8,10 @@ proc-macro = true
 
 [package]
 authors = ["Caio Fernandes <c410.f3r@gmail.com>"]
-categories = ["data-structures", "development-tools", "no-std", "rust-patterns"]
+categories = ["development-tools"]
 description = "Derives for cl-traits"
 edition = "2018"
-keywords = ["structures", "collections", "traits"]
+keywords = ["collections", "traits"]
 license = "Apache-2.0"
 name = "cl-traits-derive"
 readme = "README.md"
