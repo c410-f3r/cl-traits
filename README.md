@@ -1,6 +1,6 @@
 # Collection Traits (cl-traits)
 
-Yet another library that provides traits that describe collections. This is a best effort without GAT.
+Yet another library that generalizes collections. This is a best effort without GAT.
 
 Many data structures have unique features that make it difficult or even impossible to create a single `trait` that fits all. This crate tries to circumvent such behaviour by providing a single method for each `trait` to achieve maximum flexibility and freedom.
 
@@ -26,7 +26,7 @@ fn main() {
 }
 ```
 
-You can see more complete examples in the `examples` subdirectories.
+You can see more complete examples in the `examples` directory.
 
 ## Derives
 
