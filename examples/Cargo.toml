@@ -1,0 +1,16 @@
+[dependencies]
+cl-traits = { features = ["alloc", "derive"], path = "../cl-traits" }
+
+[[example]]
+name = "macros"
+path = "macros.rs"
+
+[[example]]
+name = "manual"
+path = "manual.rs"
+
+[package]
+edition = "2018"
+name = "examples"
+publish = false
+version = "0.0.0"

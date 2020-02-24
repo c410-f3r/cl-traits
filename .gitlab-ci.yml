@@ -1,0 +1,35 @@
+image: rustlang/rust:nightly-slim
+
+before_script:
+  # Cache
+  - mkdir -p .cargo_cache
+  - export CARGO_HOME="${PWD}/.cargo_cache"
+  
+  # Lint
+  - rustup component add clippy
+  - rustup component add rustfmt
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .cargo_cache/
+    - target/
+
+stages:
+  - lint
+  - test
+
+clippy:
+  stage: lint
+  script:
+    - cargo clippy --all-features
+
+rustfmt:
+  stage: lint
+  script:
+    - cargo fmt -- --check
+
+test:
+  script:
+    - ./scripts/tests.sh
+  stage: test

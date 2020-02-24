@@ -1,0 +1,23 @@
+[dependencies]
+arrayvec = { default-features = false, optional = true, version = "0.5" }
+cl-traits-derive = { optional = true, path = "../cl-traits-derive", version = "0.3" }
+serde = { default-features = false, optional = true, version = "1.0" }
+smallvec = { default-features = false, optional = true, version = "1.2" }
+staticvec = { default-features = false, optional = true, version = "0.8" }
+
+[features]
+alloc = []
+default = []
+derive = ["cl-traits-derive"]
+
+[package]
+authors = ["Caio Fernandes <c410.f3r@gmail.com>"]
+categories = ["data-structures", "development-tools", "no-std"]
+description = "Provides traits that describe collections"
+edition = "2018"
+keywords = ["structures", "collections", "traits"]
+license = "Apache-2.0"
+name = "cl-traits"
+readme = "README.md"
+repository = "https://gitlab.com/c410-f3r/cl-traits"
+version = "0.3.0"
