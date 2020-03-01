@@ -19,18 +19,12 @@ mod utils;
 extern crate alloc;
 
 pub use array_wrapper::*;
-#[cfg(feature = "arrayvec")]
-pub use arrayvec::ArrayVec;
 pub use capacity::*;
 #[cfg(feature = "derive")]
 pub use cl_traits_derive::*;
 pub use clear::*;
 pub use length::*;
 pub use push::*;
-#[cfg(feature = "smallvec")]
-pub use smallvec::SmallVec;
-#[cfg(feature = "staticvec")]
-pub use staticvec::StaticVec;
 pub use swap::*;
 pub use truncate::*;
 pub use utils::*;
