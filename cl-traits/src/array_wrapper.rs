@@ -265,6 +265,16 @@ impl<'a, T, const N: usize> IntoIterator for &'a mut ArrayWrapper<T, N> {
   }
 }
 
+impl<T, const N: usize> Ord for ArrayWrapper<T, N>
+where
+  T: Ord,
+{
+  #[inline]
+  fn cmp(&self, other: &Self) -> Ordering {
+    self.array[..].cmp(&other.array[..])
+  }
+}
+
 impl<T, const N: usize> PartialEq for ArrayWrapper<T, N>
 where
   T: PartialEq,
@@ -272,6 +282,16 @@ where
   #[inline]
   fn eq(&self, other: &Self) -> bool {
     self.array[..] == other.array[..]
+  }
+}
+
+impl<T, const N: usize> PartialOrd for ArrayWrapper<T, N>
+where
+  T: PartialOrd,
+{
+  #[inline]
+  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+    self.array[..].partial_cmp(&other.array[..])
   }
 }
 
