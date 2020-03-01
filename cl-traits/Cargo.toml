@@ -9,6 +9,10 @@ staticvec = { default-features = false, optional = true, version = "0.8" }
 alloc = []
 default = []
 derive = ["cl-traits-derive"]
+with_serde = ["serde"]
+with_arrayvec = ["arrayvec"]
+with_smallvec = ["smallvec"]
+with_staticvec = ["staticvec"]
 
 [package]
 authors = ["Caio Fernandes <c410.f3r@gmail.com>"]

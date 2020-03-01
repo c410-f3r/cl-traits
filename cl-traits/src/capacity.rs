@@ -24,7 +24,7 @@ impl<T> Capacity for alloc::vec::Vec<T> {
   }
 }
 
-#[cfg(feature = "arrayvec")]
+#[cfg(feature = "with_arrayvec")]
 impl<T, const N: usize> Capacity for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
   type Output = usize;
 
@@ -33,7 +33,7 @@ impl<T, const N: usize> Capacity for arrayvec::ArrayVec<crate::ArrayWrapper<T, N
   }
 }
 
-#[cfg(feature = "smallvec")]
+#[cfg(feature = "with_smallvec")]
 impl<T, const N: usize> Capacity for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
   type Output = usize;
 
@@ -42,7 +42,7 @@ impl<T, const N: usize> Capacity for smallvec::SmallVec<crate::ArrayWrapper<T, N
   }
 }
 
-#[cfg(feature = "staticvec")]
+#[cfg(feature = "with_staticvec")]
 impl<T, const N: usize> Capacity for staticvec::StaticVec<T, N> {
   type Output = usize;
 

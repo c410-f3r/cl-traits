@@ -1,12 +1,13 @@
 use crate::create_array;
 use core::{
   borrow::{Borrow, BorrowMut},
+  cmp::Ordering,
   fmt,
   iter::IntoIterator,
   ops::{Deref, DerefMut, Index, IndexMut},
   slice::{Iter, IterMut, SliceIndex},
 };
-#[cfg(feature = "serde")]
+#[cfg(feature = "with_serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Arbitrary length array wrapper. This structure is necessary for third-party
@@ -22,7 +23,7 @@ impl<T, const N: usize> ArrayWrapper<T, N> {
   }
 }
 
-#[cfg(feature = "arrayvec")]
+#[cfg(feature = "with_arrayvec")]
 unsafe impl<T, const N: usize> arrayvec::Array for ArrayWrapper<T, N> {
   type Index = usize;
   type Item = T;
@@ -38,7 +39,7 @@ unsafe impl<T, const N: usize> arrayvec::Array for ArrayWrapper<T, N> {
   }
 }
 
-#[cfg(feature = "smallvec")]
+#[cfg(feature = "with_smallvec")]
 unsafe impl<T, const N: usize> smallvec::Array for ArrayWrapper<T, N> {
   type Item = T;
 
@@ -47,7 +48,7 @@ unsafe impl<T, const N: usize> smallvec::Array for ArrayWrapper<T, N> {
   }
 }
 
-#[cfg(feature = "serde")]
+#[cfg(feature = "with_serde")]
 impl<'de, T, const N: usize> Deserialize<'de> for ArrayWrapper<T, N>
 where
   T: Deserialize<'de> + 'de,
@@ -94,7 +95,7 @@ where
   }
 }
 
-#[cfg(feature = "serde")]
+#[cfg(feature = "with_serde")]
 impl<T, const N: usize> Serialize for ArrayWrapper<T, N>
 where
   T: Serialize,

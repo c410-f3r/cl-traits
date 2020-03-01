@@ -16,7 +16,7 @@ impl<T> Clear for alloc::vec::Vec<T> {
   }
 }
 
-#[cfg(feature = "arrayvec")]
+#[cfg(feature = "with_arrayvec")]
 impl<T, const N: usize> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
   type Output = ();
 
@@ -25,7 +25,7 @@ impl<T, const N: usize> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> 
   }
 }
 
-#[cfg(feature = "smallvec")]
+#[cfg(feature = "with_smallvec")]
 impl<T, const N: usize> Clear for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
   type Output = ();
 
@@ -34,7 +34,7 @@ impl<T, const N: usize> Clear for smallvec::SmallVec<crate::ArrayWrapper<T, N>> 
   }
 }
 
-#[cfg(feature = "staticvec")]
+#[cfg(feature = "with_staticvec")]
 impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
   type Output = ();
 
