@@ -10,6 +10,13 @@ use core::{
 #[cfg(feature = "with_serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+#[cfg(feature = "with_arrayvec")]
+/// A shortcut for `ArrayVec<ArrayWrapper<T, N>>`
+pub type ArrayVecArrayWrapper<T, const N: usize> = arrayvec::ArrayVec<ArrayWrapper<T, N>>;
+#[cfg(feature = "with_smallvec")]
+/// A shortcut for `SmallVec<ArrayWrapper<T, N>>`
+pub type SmallVecArrayWrapper<T, const N: usize> = smallvec::SmallVec<ArrayWrapper<T, N>>;
+
 /// Arbitrary length array wrapper. This structure is necessary for third-party
 /// and std implementations.
 pub struct ArrayWrapper<T, const N: usize> {
