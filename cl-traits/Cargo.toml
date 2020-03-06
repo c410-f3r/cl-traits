@@ -23,5 +23,5 @@ keywords = ["collections", "traits"]
 license = "Apache-2.0"
 name = "cl-traits"
 readme = "README.md"
-repository = "https://gitlab.com/c410-f3r/cl-traits"
+repository = "https://github.com/c410-f3r/cl-traits"
 version = "0.4.2"
