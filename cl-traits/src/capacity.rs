@@ -7,6 +7,7 @@ pub trait Capacity {
   fn capacity(&self) -> Self::Output;
 }
 
+#[cfg(feature = "const_generics")]
 impl<T, const N: usize> Capacity for [T; N] {
   type Output = usize;
 

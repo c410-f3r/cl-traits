@@ -18,6 +18,7 @@ impl<'a, T> Swap for &'a mut [T] {
   }
 }
 
+#[cfg(feature = "const_generics")]
 impl<T, const N: usize> Swap for [T; N] {
   type Input = (usize, usize);
   type Output = ();

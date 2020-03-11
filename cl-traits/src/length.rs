@@ -23,6 +23,7 @@ impl<'a, T> Length for &'a mut [T] {
   }
 }
 
+#[cfg(feature = "const_generics")]
 impl<T, const N: usize> Length for [T; N] {
   type Output = usize;
 
