@@ -223,6 +223,16 @@ impl<T, const N: usize> From<[T; N]> for ArrayWrapper<T, N> {
   }
 }
 
+impl<T, const N: usize, const O: usize> From<[[T; N]; O]> for ArrayWrapper<ArrayWrapper<T, N>, O>
+where
+  T: Copy
+{
+  #[inline]
+  fn from(from: [[T; N]; O]) -> Self {
+    Self { array: create_array(|idx| from[idx].into()) }
+  }
+}
+
 impl<T, const N: usize> From<ArrayWrapper<T, N>> for [T; N] {
   #[inline]
   fn from(from: ArrayWrapper<T, N>) -> Self {
