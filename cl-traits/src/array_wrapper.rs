@@ -225,7 +225,7 @@ impl<T, const N: usize> From<[T; N]> for ArrayWrapper<T, N> {
 
 impl<T, const N: usize, const O: usize> From<[[T; N]; O]> for ArrayWrapper<ArrayWrapper<T, N>, O>
 where
-  T: Copy
+  T: Copy,
 {
   #[inline]
   fn from(from: [[T; N]; O]) -> Self {

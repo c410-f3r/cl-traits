@@ -5,7 +5,6 @@
 #![forbid(missing_debug_implementations, missing_docs, rust_2018_idioms)]
 #![no_std]
 
-
 #[cfg(feature = "const_generics")]
 mod array_wrapper;
 mod capacity;
