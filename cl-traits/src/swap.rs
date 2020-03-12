@@ -18,16 +18,6 @@ impl<'a, T> Swap for &'a mut [T] {
   }
 }
 
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Swap for [T; N] {
-  type Input = (usize, usize);
-  type Output = ();
-
-  fn swap(&mut self, (a, b): Self::Input) -> Self::Output {
-    self.as_mut().swap(a, b);
-  }
-}
-
 #[cfg(feature = "alloc")]
 impl<T> Swap for alloc::vec::Vec<T> {
   type Input = (usize, usize);
@@ -35,6 +25,17 @@ impl<T> Swap for alloc::vec::Vec<T> {
 
   fn swap(&mut self, (a, b): Self::Input) -> Self::Output {
     self.as_mut_slice().swap(a, b);
+  }
+}
+
+
+#[cfg(feature = "const_generics")]
+impl<T, const N: usize> Swap for [T; N] {
+  type Input = (usize, usize);
+  type Output = ();
+
+  fn swap(&mut self, (a, b): Self::Input) -> Self::Output {
+    self.as_mut().swap(a, b);
   }
 }
 

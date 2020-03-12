@@ -12,13 +12,13 @@ impl<'a, T> Storage for &'a mut [T] {
   type Item = T;
 }
 
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Storage for [T; N] {
+#[cfg(feature = "alloc")]
+impl<T> Storage for alloc::vec::Vec<T> {
   type Item = T;
 }
 
-#[cfg(feature = "alloc")]
-impl<T> Storage for alloc::vec::Vec<T> {
+#[cfg(feature = "const_generics")]
+impl<T, const N: usize> Storage for [T; N] {
   type Item = T;
 }
 
