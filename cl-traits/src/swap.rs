@@ -28,7 +28,6 @@ impl<T> Swap for alloc::vec::Vec<T> {
   }
 }
 
-
 #[cfg(feature = "const_generics")]
 impl<T, const N: usize> Swap for [T; N] {
   type Input = (usize, usize);
