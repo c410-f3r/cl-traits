@@ -2,7 +2,7 @@
 pub trait Truncate {
   /// Input type for the [`truncate`](Truncate::truncate)` method.
   type Input;
-  /// Outputurn type for the [`truncate`](Truncate::truncate)` method.
+  /// Output type for the [`truncate`](Truncate::truncate)` method.
   type Output;
 
   /// Truncates the storage.

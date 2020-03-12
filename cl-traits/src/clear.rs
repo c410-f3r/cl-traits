@@ -1,6 +1,6 @@
 /// Has some sort of storage that can be cleared.
 pub trait Clear {
-  /// Outputurn type for the [`clear`](Clear::clear)` method.
+  /// Output type for the [`clear`](Clear::clear)` method.
   type Output;
 
   /// Clears the storage.

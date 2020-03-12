@@ -2,7 +2,7 @@
 pub trait Swap {
   /// Input type for the [`swap`](Swap::swap)` method.
   type Input;
-  /// Outputurn type for the [`swap`](Swap::swap)` method.
+  /// Output type for the [`swap`](Swap::swap)` method.
   type Output;
 
   /// Swaps two elements

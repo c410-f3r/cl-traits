@@ -1,6 +1,6 @@
 /// Has some sort of storage that holds a maximum number of elements.
 pub trait Capacity {
-  /// Outputurn type for the [`capacity`](Capacity::capacity)` method.
+  /// Output type for the [`capacity`](Capacity::capacity)` method.
   type Output;
 
   /// The number of elements that can be holded.

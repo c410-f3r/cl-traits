@@ -1,6 +1,6 @@
 /// Has some sort of storage that holds a certain number of elements.
 pub trait Length {
-  /// Outputurn type for the [`length`](Length::length)` method.
+  /// Output type for the [`length`](Length::length)` method.
   type Output;
 
   /// The number of elements.
