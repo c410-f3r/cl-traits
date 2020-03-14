@@ -20,6 +20,7 @@ mod swap;
 mod truncate;
 #[cfg(feature = "const_generics")]
 mod utils;
+mod with_capacity;
 
 #[cfg(feature = "const_generics")]
 pub use array_wrapper::*;
@@ -34,3 +35,4 @@ pub use swap::*;
 pub use truncate::*;
 #[cfg(feature = "const_generics")]
 pub use utils::*;
+pub use with_capacity::*;
