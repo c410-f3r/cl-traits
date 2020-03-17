@@ -3,7 +3,7 @@ arrayvec = { default-features = false, optional = true, version = "0.5" }
 cl-traits-derive = { optional = true, path = "../cl-traits-derive", version = "0.4" }
 serde = { default-features = false, optional = true, version = "1.0" }
 smallvec = { default-features = false, optional = true, version = "1.2" }
-staticvec = { default-features = false, optional = true, version = "0.8" }
+staticvec = { default-features = false, optional = true, version = "0.9" }
 
 [features]
 alloc = []
