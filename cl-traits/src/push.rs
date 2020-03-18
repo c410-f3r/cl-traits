@@ -20,8 +20,11 @@ impl<T> Push for alloc::vec::Vec<T> {
 }
 
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Push for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
-  type Input = T;
+impl<A> Push for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
+  type Input = A::Item;
   type Output = ();
 
   fn push(&mut self, input: Self::Input) -> Self::Output {
@@ -30,8 +33,11 @@ impl<T, const N: usize> Push for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Push for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
-  type Input = T;
+impl<A> Push for smallvec::SmallVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
+  type Input = A::Item;
   type Output = ();
 
   fn push(&mut self, input: Self::Input) -> Self::Output {

@@ -17,7 +17,10 @@ impl<T> WithCapacity for alloc::vec::Vec<T> {
 }
 
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> WithCapacity for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
+impl<A> WithCapacity for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Input = usize;
 
   fn with_capacity(_: Self::Input) -> Self {
@@ -26,7 +29,10 @@ impl<T, const N: usize> WithCapacity for arrayvec::ArrayVec<crate::ArrayWrapper<
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> WithCapacity for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
+impl<A> WithCapacity for smallvec::SmallVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Input = usize;
 
   fn with_capacity(input: Self::Input) -> Self {

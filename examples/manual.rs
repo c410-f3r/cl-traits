@@ -1,10 +1,5 @@
 // Manual trait implementations without macros.
 
-#![allow(incomplete_features)]
-#![feature(generic_associated_types)]
-
-extern crate cl_traits;
-
 use cl_traits::*;
 
 trait GenericVector<E>:

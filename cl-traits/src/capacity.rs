@@ -1,3 +1,5 @@
+use crate::{Array, ArrayWrapper};
+
 /// Has some sort of storage that holds a maximum number of elements.
 pub trait Capacity {
   /// Output type for the [`capacity`](Capacity::capacity)` method.
@@ -5,6 +7,17 @@ pub trait Capacity {
 
   /// The number of elements that can be holded.
   fn capacity(&self) -> Self::Output;
+}
+
+impl<A> Capacity for ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Output = usize;
+
+  fn capacity(&self) -> Self::Output {
+    A::CAPACITY
+  }
 }
 
 #[cfg(feature = "alloc")]
@@ -16,17 +29,11 @@ impl<T> Capacity for alloc::vec::Vec<T> {
   }
 }
 
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Capacity for [T; N] {
-  type Output = usize;
-
-  fn capacity(&self) -> Self::Output {
-    N
-  }
-}
-
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Capacity for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
+impl<A> Capacity for arrayvec::ArrayVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
   type Output = usize;
 
   fn capacity(&self) -> Self::Output {
@@ -35,7 +42,10 @@ impl<T, const N: usize> Capacity for arrayvec::ArrayVec<crate::ArrayWrapper<T, N
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Capacity for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
+impl<A> Capacity for smallvec::SmallVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
   type Output = usize;
 
   fn capacity(&self) -> Self::Output {

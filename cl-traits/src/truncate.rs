@@ -20,7 +20,10 @@ impl<T> Truncate for alloc::vec::Vec<T> {
 }
 
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Truncate for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
+impl<A> Truncate for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Input = usize;
   type Output = ();
 
@@ -30,7 +33,10 @@ impl<T, const N: usize> Truncate for arrayvec::ArrayVec<crate::ArrayWrapper<T, N
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Truncate for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
+impl<A> Truncate for smallvec::SmallVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Input = usize;
   type Output = ();
 

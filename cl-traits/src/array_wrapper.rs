@@ -1,4 +1,4 @@
-use crate::create_array;
+use crate::{create_array, Array};
 use core::{
   borrow::{Borrow, BorrowMut},
   cmp::Ordering,
@@ -11,54 +11,66 @@ use core::{
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[cfg(feature = "with_arrayvec")]
-/// A shortcut for `ArrayVec<ArrayWrapper<T, N>>`
-pub type ArrayVecArrayWrapper<T, const N: usize> = arrayvec::ArrayVec<ArrayWrapper<T, N>>;
+/// A shortcut for `ArrayVec<ArrayWrapper<A>>`
+pub type ArrayVecArrayWrapper<A> = arrayvec::ArrayVec<ArrayWrapper<A>>;
 #[cfg(feature = "with_smallvec")]
-/// A shortcut for `SmallVec<ArrayWrapper<T, N>>`
-pub type SmallVecArrayWrapper<T, const N: usize> = smallvec::SmallVec<ArrayWrapper<T, N>>;
+/// A shortcut for `SmallVec<ArrayWrapper<A>>`
+pub type SmallVecArrayWrapper<A> = smallvec::SmallVec<ArrayWrapper<A>>;
 
-/// Arbitrary length array wrapper. This structure is necessary for third-party
-/// and std implementations.
-pub struct ArrayWrapper<T, const N: usize> {
-  array: [T; N],
+/// With `const_generics` feature, wraps an arbitrary length array. Otherwise, wraps an
+/// array with up to 32 elements. Necessary for third-party and std implementations.
+///
+/// This structure will be removed once `const generics` is stabilized.
+pub struct ArrayWrapper<A> {
+  pub(crate) array: A,
 }
 
-impl<T, const N: usize> ArrayWrapper<T, N> {
+impl<A> ArrayWrapper<A>
+where
+  A: Array,
+{
   /// Wraps `array` into this structure.
-  pub fn new(array: [T; N]) -> Self {
+  pub fn new(array: A) -> Self {
     Self { array }
   }
 }
 
 #[cfg(feature = "with_arrayvec")]
-unsafe impl<T, const N: usize> arrayvec::Array for ArrayWrapper<T, N> {
+unsafe impl<A> arrayvec::Array for ArrayWrapper<A>
+where
+  A: Array,
+{
   type Index = usize;
-  type Item = T;
+  type Item = A::Item;
 
-  const CAPACITY: usize = N;
+  const CAPACITY: usize = A::CAPACITY;
 
   fn as_slice(&self) -> &[Self::Item] {
-    &self.array
+    self.array.slice()
   }
 
   fn as_mut_slice(&mut self) -> &mut [Self::Item] {
-    &mut self.array
+    self.array.slice_mut()
   }
 }
 
 #[cfg(feature = "with_smallvec")]
-unsafe impl<T, const N: usize> smallvec::Array for ArrayWrapper<T, N> {
-  type Item = T;
+unsafe impl<A> smallvec::Array for ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Item = A::Item;
 
   fn size() -> usize {
-    N
+    A::CAPACITY
   }
 }
 
 #[cfg(feature = "with_serde")]
-impl<'de, T, const N: usize> Deserialize<'de> for ArrayWrapper<T, N>
+impl<'de, A, T> Deserialize<'de> for ArrayWrapper<A>
 where
-  T: Deserialize<'de> + 'de,
+  A: Array<Item = T>,
+  T: Deserialize<'de>,
 {
   fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
   where
@@ -67,16 +79,17 @@ where
     use core::marker::PhantomData;
     use serde::de::{Error, SeqAccess, Visitor};
 
-    struct ArrayWrapperVisitor<'de, T, const N: usize>(PhantomData<&'de [T; N]>);
+    struct ArrayWrapperVisitor<'de, A, T>(PhantomData<(&'de (), A, T)>);
 
-    impl<'de, T, const N: usize> Visitor<'de> for ArrayWrapperVisitor<'de, T, N>
+    impl<'de, A, T> Visitor<'de> for ArrayWrapperVisitor<'de, A, T>
     where
+      A: Array<Item = T>,
       T: Deserialize<'de>,
     {
-      type Value = ArrayWrapper<T, N>;
+      type Value = ArrayWrapper<A>;
 
       fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "an array with no more than {} items", N)
+        write!(formatter, "an array with no more than {} items", A::CAPACITY)
       }
 
       fn visit_seq<SA>(self, mut seq: SA) -> Result<Self::Value, SA::Error>
@@ -84,8 +97,8 @@ where
         SA: SeqAccess<'de>,
       {
         let array = unsafe {
-          let mut array: core::mem::MaybeUninit<[T; N]> = core::mem::MaybeUninit::uninit();
-          for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
+          let mut array: core::mem::MaybeUninit<A> = core::mem::MaybeUninit::uninit();
+          for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
             if let Some(value) = seq.next_element()? {
               core::ptr::write(value_ptr, value);
             } else {
@@ -98,14 +111,15 @@ where
       }
     }
 
-    deserializer.deserialize_seq(ArrayWrapperVisitor::<T, N>(PhantomData))
+    deserializer.deserialize_seq(ArrayWrapperVisitor::<A, T>(PhantomData))
   }
 }
 
 #[cfg(feature = "with_serde")]
-impl<T, const N: usize> Serialize for ArrayWrapper<T, N>
+impl<A> Serialize for ArrayWrapper<A>
 where
-  T: Serialize,
+  A: Array,
+  A::Item: Serialize,
 {
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
   where
@@ -115,71 +129,88 @@ where
   }
 }
 
-impl<T, const N: usize> AsRef<[T]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn as_ref(&self) -> &[T] {
-    &self.array
-  }
-}
-
-impl<T, const N: usize> AsRef<[T; N]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn as_ref(&self) -> &[T; N] {
-    &self.array
-  }
-}
-
-impl<T, const N: usize> AsMut<[T]> for ArrayWrapper<T, N> {
-  fn as_mut(&mut self) -> &mut [T] {
-    &mut self.array
-  }
-}
-
-impl<T, const N: usize> AsMut<[T; N]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn as_mut(&mut self) -> &mut [T; N] {
-    &mut self.array
-  }
-}
-
-impl<T, const N: usize> Borrow<[T]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn borrow(&self) -> &[T] {
-    &self.array
-  }
-}
-
-impl<T, const N: usize> Borrow<[T]> for &'_ ArrayWrapper<T, N> {
-  #[inline]
-  fn borrow(&self) -> &[T] {
-    &self.array
-  }
-}
-
-impl<T, const N: usize> Borrow<[T; N]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn borrow(&self) -> &[T; N] {
-    &self.array
-  }
-}
-
-impl<T, const N: usize> BorrowMut<[T]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn borrow_mut(&mut self) -> &mut [T] {
-    &mut self.array
-  }
-}
-
-impl<T, const N: usize> BorrowMut<[T; N]> for ArrayWrapper<T, N> {
-  #[inline]
-  fn borrow_mut(&mut self) -> &mut [T; N] {
-    &mut self.array
-  }
-}
-
-impl<T, const N: usize> Clone for ArrayWrapper<T, N>
+impl<A> AsRef<A> for ArrayWrapper<A>
 where
-  T: Clone,
+  A: Array,
+{
+  #[inline]
+  fn as_ref(&self) -> &A {
+    &self.array
+  }
+}
+
+impl<A> AsRef<[A::Item]> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  #[inline]
+  fn as_ref(&self) -> &[A::Item] {
+    &self.array.slice()
+  }
+}
+
+impl<A> AsMut<A> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  fn as_mut(&mut self) -> &mut A {
+    &mut self.array
+  }
+}
+
+impl<A> AsMut<[A::Item]> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  fn as_mut(&mut self) -> &mut [A::Item] {
+    self.array.slice_mut()
+  }
+}
+
+impl<A> Borrow<A> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  #[inline]
+  fn borrow(&self) -> &A {
+    &self.array
+  }
+}
+
+impl<A> Borrow<[A::Item]> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  #[inline]
+  fn borrow(&self) -> &[A::Item] {
+    self.array.slice()
+  }
+}
+
+impl<A> BorrowMut<A> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  #[inline]
+  fn borrow_mut(&mut self) -> &mut A {
+    &mut self.array
+  }
+}
+
+impl<A> BorrowMut<[A::Item]> for ArrayWrapper<A>
+where
+  A: Array,
+{
+  #[inline]
+  fn borrow_mut(&mut self) -> &mut [A::Item] {
+    self.array.slice_mut()
+  }
+}
+
+impl<A> Clone for ArrayWrapper<A>
+where
+  A: Array + Clone,
+  A::Item: Clone,
 {
   #[inline]
   fn clone(&self) -> Self {
@@ -187,137 +218,152 @@ where
   }
 }
 
-impl<T, const N: usize> Copy for ArrayWrapper<T, N> where T: Copy {}
-
-impl<T, const N: usize> Default for ArrayWrapper<T, N>
+impl<A> Copy for ArrayWrapper<A>
 where
-  T: Default,
+  A: Array + Copy,
+  A::Item: Copy,
+{
+}
+
+impl<A> Default for ArrayWrapper<A>
+where
+  A: Array,
+  A::Item: Default,
 {
   #[inline]
   fn default() -> Self {
-    ArrayWrapper { array: create_array(|_| T::default()) }
+    ArrayWrapper { array: create_array(|_| A::Item::default()) }
   }
 }
 
-impl<T, const N: usize> Deref for ArrayWrapper<T, N> {
-  type Target = [T; N];
+impl<A> Deref for ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Target = A;
   #[inline]
   fn deref(&self) -> &Self::Target {
     &self.array
   }
 }
 
-impl<T, const N: usize> DerefMut for ArrayWrapper<T, N> {
+impl<A> DerefMut for ArrayWrapper<A>
+where
+  A: Array,
+{
   #[inline]
-  fn deref_mut(&mut self) -> &mut [T; N] {
+  fn deref_mut(&mut self) -> &mut Self::Target {
     &mut self.array
   }
 }
 
-impl<T, const N: usize> Eq for ArrayWrapper<T, N> where T: Eq {}
+impl<A> Eq for ArrayWrapper<A>
+where
+  A: Array,
+  A::Item: Eq,
+{
+}
 
-impl<T, const N: usize> From<[T; N]> for ArrayWrapper<T, N> {
+impl<A> From<A> for ArrayWrapper<A>
+where
+  A: Array,
+{
   #[inline]
-  fn from(from: [T; N]) -> Self {
+  fn from(from: A) -> Self {
     Self { array: from }
   }
 }
 
-impl<T, const N: usize, const O: usize> From<[[T; N]; O]> for ArrayWrapper<ArrayWrapper<T, N>, O>
+impl<I, A> Index<I> for ArrayWrapper<A>
 where
-  T: Copy,
+  A: Array,
+  I: SliceIndex<[A::Item]>,
 {
-  #[inline]
-  fn from(from: [[T; N]; O]) -> Self {
-    Self { array: create_array(|idx| from[idx].into()) }
-  }
-}
-
-impl<T, const N: usize> From<ArrayWrapper<T, N>> for [T; N] {
-  #[inline]
-  fn from(from: ArrayWrapper<T, N>) -> Self {
-    from.array
-  }
-}
-
-impl<I, T, const N: usize> Index<I> for ArrayWrapper<T, N>
-where
-  I: SliceIndex<[T]>,
-{
-  type Output = <I as SliceIndex<[T]>>::Output;
+  type Output = <I as SliceIndex<[A::Item]>>::Output;
 
   #[inline]
   fn index(&self, idx: I) -> &Self::Output {
-    &self.array[idx]
+    &self.array.slice()[idx]
   }
 }
 
-impl<I, T, const N: usize> IndexMut<I> for ArrayWrapper<T, N>
+impl<I, A> IndexMut<I> for ArrayWrapper<A>
 where
-  I: SliceIndex<[T]>,
+  A: Array,
+  I: SliceIndex<[A::Item]>,
 {
   #[inline]
   fn index_mut(&mut self, idx: I) -> &mut Self::Output {
-    &mut self.array[idx]
+    &mut self.array.slice_mut()[idx]
   }
 }
 
-impl<'a, T, const N: usize> IntoIterator for &'a ArrayWrapper<T, N> {
-  type Item = &'a T;
-  type IntoIter = Iter<'a, T>;
-
-  #[inline]
-  fn into_iter(self) -> Self::IntoIter {
-    self.array.iter()
-  }
-}
-
-impl<'a, T, const N: usize> IntoIterator for &'a mut ArrayWrapper<T, N> {
-  type Item = &'a mut T;
-  type IntoIter = IterMut<'a, T>;
-
-  #[inline]
-  fn into_iter(self) -> Self::IntoIter {
-    self.array.iter_mut()
-  }
-}
-
-impl<T, const N: usize> Ord for ArrayWrapper<T, N>
+impl<'a, A> IntoIterator for &'a ArrayWrapper<A>
 where
-  T: Ord,
+  A: Array,
+{
+  type Item = &'a A::Item;
+  type IntoIter = Iter<'a, A::Item>;
+
+  #[inline]
+  fn into_iter(self) -> Self::IntoIter {
+    self.array.slice().iter()
+  }
+}
+
+impl<'a, A> IntoIterator for &'a mut ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Item = &'a mut A::Item;
+  type IntoIter = IterMut<'a, A::Item>;
+
+  #[inline]
+  fn into_iter(self) -> Self::IntoIter {
+    self.array.slice_mut().iter_mut()
+  }
+}
+
+impl<A> Ord for ArrayWrapper<A>
+where
+  A: Array,
+  A::Item: Ord,
 {
   #[inline]
   fn cmp(&self, other: &Self) -> Ordering {
-    self.array[..].cmp(&other.array[..])
+    self.array.slice().cmp(&other.array.slice())
   }
 }
 
-impl<T, const N: usize> PartialEq for ArrayWrapper<T, N>
+impl<A> PartialEq for ArrayWrapper<A>
 where
-  T: PartialEq,
+  A: Array,
+  A::Item: PartialEq,
 {
   #[inline]
   fn eq(&self, other: &Self) -> bool {
-    self.array[..] == other.array[..]
+    self.array.slice() == other.array.slice()
   }
 }
 
-impl<T, const N: usize> PartialOrd for ArrayWrapper<T, N>
+impl<A> PartialOrd for ArrayWrapper<A>
 where
-  T: PartialOrd,
+  A: Array,
+  A::Item: PartialOrd,
 {
   #[inline]
   fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    self.array[..].partial_cmp(&other.array[..])
+    self.array.slice().partial_cmp(&other.array.slice())
   }
 }
 
-impl<T, const N: usize> fmt::Debug for ArrayWrapper<T, N>
+impl<A> fmt::Debug for ArrayWrapper<A>
 where
-  T: fmt::Debug,
+  A: Array,
+  A::Item: fmt::Debug,
 {
   #[inline]
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    f.debug_list().entries(&self.array[..]).finish()
+    f.debug_list().entries(self.array.slice()).finish()
   }
 }

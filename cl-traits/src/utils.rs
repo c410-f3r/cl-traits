@@ -1,14 +1,16 @@
+use crate::Array;
 use core::{mem::MaybeUninit, ptr};
 
 /// Creates an array `[T; N]` where each array element `T` is returned by the `cb` call.
 #[inline]
-pub fn create_array<F, T, const N: usize>(mut cb: F) -> [T; N]
+pub fn create_array<A, F>(mut cb: F) -> A
 where
-  F: FnMut(usize) -> T,
+  A: Array,
+  F: FnMut(usize) -> A::Item,
 {
   unsafe {
-    let mut array: MaybeUninit<[T; N]> = MaybeUninit::uninit();
-    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
+    let mut array: MaybeUninit<A> = MaybeUninit::uninit();
+    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
       ptr::write(value_ptr, cb(idx));
     }
     array.assume_init()

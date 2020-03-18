@@ -1,3 +1,5 @@
+use crate::{Array, ArrayWrapper};
+
 /// Has some sort of storage that holds a certain number of elements.
 pub trait Length {
   /// Output type for the [`length`](Length::length)` method.
@@ -23,6 +25,17 @@ impl<'a, T> Length for &'a mut [T] {
   }
 }
 
+impl<A> Length for ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Output = usize;
+
+  fn length(&self) -> Self::Output {
+    self.array.slice().len()
+  }
+}
+
 #[cfg(feature = "alloc")]
 impl<T> Length for alloc::vec::Vec<T> {
   type Output = usize;
@@ -32,17 +45,11 @@ impl<T> Length for alloc::vec::Vec<T> {
   }
 }
 
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Length for [T; N] {
-  type Output = usize;
-
-  fn length(&self) -> Self::Output {
-    N
-  }
-}
-
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Length for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
+impl<A> Length for arrayvec::ArrayVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
   type Output = usize;
 
   fn length(&self) -> Self::Output {
@@ -51,7 +58,10 @@ impl<T, const N: usize> Length for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>>
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Length for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
+impl<A> Length for smallvec::SmallVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
   type Output = usize;
 
   fn length(&self) -> Self::Output {

@@ -8,7 +8,7 @@
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-#[cfg(feature = "const_generics")]
+mod array;
 mod array_wrapper;
 mod capacity;
 mod clear;
@@ -18,11 +18,10 @@ mod push;
 mod storage;
 mod swap;
 mod truncate;
-#[cfg(feature = "const_generics")]
 mod utils;
 mod with_capacity;
 
-#[cfg(feature = "const_generics")]
+pub use array::*;
 pub use array_wrapper::*;
 pub use capacity::*;
 #[cfg(feature = "with_derive")]
@@ -33,6 +32,5 @@ pub use push::*;
 pub use storage::*;
 pub use swap::*;
 pub use truncate::*;
-#[cfg(feature = "const_generics")]
 pub use utils::*;
 pub use with_capacity::*;

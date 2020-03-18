@@ -1,7 +1,16 @@
+use crate::{Array, ArrayWrapper};
+
 /// Storage is anything that can hold a collection of items
 pub trait Storage {
   /// Storage item
   type Item;
+}
+
+impl<A> Storage for ArrayWrapper<A>
+where
+  A: Array,
+{
+  type Item = A::Item;
 }
 
 impl<'a, T> Storage for &'a [T] {
@@ -17,24 +26,20 @@ impl<T> Storage for alloc::vec::Vec<T> {
   type Item = T;
 }
 
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Storage for crate::ArrayWrapper<T, N> {
-  type Item = T;
-}
-
-#[cfg(feature = "const_generics")]
-impl<T, const N: usize> Storage for [T; N] {
-  type Item = T;
-}
-
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Storage for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
-  type Item = T;
+impl<A> Storage for arrayvec::ArrayVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
+  type Item = A::Item;
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Storage for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
-  type Item = T;
+impl<A> Storage for smallvec::SmallVec<ArrayWrapper<A>>
+where
+  A: Array,
+{
+  type Item = A::Item;
 }
 
 #[cfg(feature = "with_staticvec")]

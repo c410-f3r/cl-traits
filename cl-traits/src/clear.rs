@@ -17,7 +17,10 @@ impl<T> Clear for alloc::vec::Vec<T> {
 }
 
 #[cfg(feature = "with_arrayvec")]
-impl<T, const N: usize> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> {
+impl<A> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Output = ();
 
   fn clear(&mut self) -> Self::Output {
@@ -26,7 +29,10 @@ impl<T, const N: usize> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<T, N>> 
 }
 
 #[cfg(feature = "with_smallvec")]
-impl<T, const N: usize> Clear for smallvec::SmallVec<crate::ArrayWrapper<T, N>> {
+impl<A> Clear for smallvec::SmallVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+{
   type Output = ();
 
   fn clear(&mut self) -> Self::Output {

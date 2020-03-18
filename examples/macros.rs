@@ -1,7 +1,5 @@
 // Trait implementations with macros.
 
-extern crate cl_traits;
-
 use cl_traits::*;
 
 #[derive(WithCapacity, WithClear, WithLength, WithSwap, WithTruncate)]

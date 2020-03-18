@@ -13,7 +13,7 @@ with_derive = ["cl-traits-derive"]
 with_serde = ["serde"]
 with_arrayvec = ["arrayvec"]
 with_smallvec = ["smallvec"]
-with_staticvec = ["staticvec"]
+with_staticvec = ["const_generics", "staticvec"]
 
 [package]
 authors = ["Caio Fernandes <c410.f3r@gmail.com>"]

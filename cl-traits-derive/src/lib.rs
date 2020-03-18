@@ -78,7 +78,11 @@ fn aggregate_fields<I>(fields: I, len: usize) -> TokenStream
 where
   I: Iterator<Item = TokenStream>,
 {
-  if len > 1 { quote!((#(#fields,)*)) } else { quote!(#(#fields)*) }
+  if len > 1 {
+    quote!((#(#fields,)*))
+  } else {
+    quote!(#(#fields)*)
+  }
 }
 
 fn common_properties(
