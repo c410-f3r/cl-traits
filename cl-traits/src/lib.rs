@@ -12,6 +12,7 @@ mod array;
 mod array_wrapper;
 mod capacity;
 mod clear;
+mod insert;
 mod length;
 mod macros;
 mod push;
@@ -27,6 +28,7 @@ pub use capacity::*;
 #[cfg(feature = "with_derive")]
 pub use cl_traits_derive::*;
 pub use clear::*;
+pub use insert::*;
 pub use length::*;
 pub use push::*;
 pub use storage::*;

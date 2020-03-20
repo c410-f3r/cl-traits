@@ -7,11 +7,11 @@ staticvec = { default-features = false, optional = true, version = "0.9" }
 
 [features]
 alloc = []
-default = []
 const_generics = []
+default = []
+with_arrayvec = ["arrayvec"]
 with_derive = ["cl-traits-derive"]
 with_serde = ["serde"]
-with_arrayvec = ["arrayvec"]
 with_smallvec = ["smallvec"]
 with_staticvec = ["const_generics", "staticvec"]
 
