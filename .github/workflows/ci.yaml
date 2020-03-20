@@ -58,11 +58,5 @@ jobs:
           command: fmt
           args: --all -- --check
 
-      - name: Compile
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --all-features
-
       - name: Test
         run: ./scripts/tests.sh && ./scripts/tests-nightly.sh
