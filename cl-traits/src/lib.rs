@@ -3,7 +3,7 @@
 #![cfg_attr(feature = "const_generics", allow(incomplete_features))]
 #![cfg_attr(feature = "const_generics", feature(const_generics))]
 #![forbid(missing_debug_implementations, missing_docs, rust_2018_idioms)]
-#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "alloc")]
 extern crate alloc;

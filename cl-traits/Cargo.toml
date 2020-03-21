@@ -6,9 +6,10 @@ smallvec = { default-features = false, optional = true, version = "1.2" }
 staticvec = { default-features = false, optional = true, version = "0.9" }
 
 [features]
-alloc = []
+alloc = ["serde/alloc"]
 const_generics = []
 default = []
+std = ["alloc", "arrayvec/std", "serde/std", "staticvec/std"]
 with_arrayvec = ["arrayvec"]
 with_derive = ["cl-traits-derive"]
 with_serde = ["serde"]
