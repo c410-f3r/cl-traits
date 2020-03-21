@@ -12,7 +12,7 @@ default = []
 std = ["alloc", "arrayvec/std", "serde/std", "staticvec/std"]
 with_arrayvec = ["arrayvec"]
 with_derive = ["cl-traits-derive"]
-with_serde = ["serde"]
+with_serde = ["arrayvec/serde", "smallvec/serde", "staticvec/serde_support", "serde"]
 with_smallvec = ["smallvec"]
 with_staticvec = ["const_generics", "staticvec"]
 
