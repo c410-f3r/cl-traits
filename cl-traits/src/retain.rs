@@ -1,6 +1,6 @@
 /// Retain
 pub trait Retain<I> {
-  /// Output type for the [`insert`](Insert::insert)` method.
+  /// Output type for the [`retain`](Retain::retain)` method.
   type Output;
 
   /// Retains only the elements specified by the `I` predicate.
