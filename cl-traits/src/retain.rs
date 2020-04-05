@@ -1,58 +1,116 @@
-/// Retain
-pub trait Retain<I> {
-  /// Output type for the [`retain`](Retain::retain)` method.
+/// See [`retain`](Retain::retain) for more information.
+pub trait Retain {
+  /// Function
+  type Fn;
+  /// Output
   type Output;
 
-  /// Retains only the elements specified by the `I` predicate.
-  fn retain(&mut self, input: I) -> Self::Output;
+  /// Retains only the elements specified by the `F` predicate.
+  fn retain(&mut self, input: Self::Fn) -> Self::Output;
 }
 
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure, &[2]);
+/// ```
 #[cfg(feature = "alloc")]
-impl<F, T> Retain<F> for alloc::vec::Vec<T>
-where
-  F: FnMut(&T) -> bool,
+impl<T> Retain for alloc::vec::Vec<T>
 {
+  type Fn = fn(&T) -> bool;
   type Output = ();
 
-  fn retain(&mut self, input: F) {
+  fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }
 }
 
-#[cfg(feature = "with_arrayvec")]
-impl<A, F> Retain<F> for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::array_vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure[..], &[2]);
+/// ```
+#[cfg(feature = "with-arrayvec")]
+impl<A> Retain for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  F: FnMut(&A::Item) -> bool,
 {
+  type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
-  fn retain(&mut self, mut input: F) {
+  fn retain(&mut self, input: Self::Fn) {
     self.retain(|i| input(i))
   }
 }
 
-#[cfg(feature = "with_smallvec")]
-impl<A, F> Retain<F> for smallvec::SmallVec<crate::ArrayWrapper<A>>
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::small_vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure[..], &[2]);
+/// ```
+#[cfg(feature = "with-smallvec")]
+impl<A> Retain for smallvec::SmallVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  F: FnMut(&A::Item) -> bool,
 {
+  type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
-  fn retain(&mut self, mut input: F) {
+  fn retain(&mut self, input: Self::Fn) {
     self.retain(|i| input(i))
   }
 }
 
-#[cfg(feature = "with_staticvec")]
-impl<F, T, const N: usize> Retain<F> for staticvec::StaticVec<T, N>
-where
-  F: FnMut(&T) -> bool,
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::static_vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure[..], &[2]);
+/// ```
+#[cfg(feature = "with-staticvec")]
+impl<T, const N: usize> Retain for staticvec::StaticVec<T, N>
 {
+  type Fn = fn(&T) -> bool;
   type Output = ();
 
-  fn retain(&mut self, input: F) {
+  fn retain(&mut self, input: Self::Fn) {
+    self.retain(input)
+  }
+}
+
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::tiny_vec_array_vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure[..], &[2]);
+/// ```
+#[cfg(feature = "with-tinyvec")]
+impl<A> Retain for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+  A::Item: Default,
+{
+  type Fn = fn(&A::Item) -> bool;
+  type Output = ();
+
+  fn retain(&mut self, input: Self::Fn) {
+    self.retain(input)
+  }
+}
+
+/// ```rust
+/// let mut structure = cl_traits::doc_tests::tiny_vec();
+/// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
+/// assert_eq!(&structure[..], &[2]);
+/// ```
+#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+impl<A> Retain for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+where
+  A: crate::Array,
+  A::Item: Default,
+{
+  type Fn = fn(&A::Item) -> bool;
+  type Output = ();
+
+  fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }
 }

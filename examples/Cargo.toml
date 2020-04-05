@@ -1,5 +1,5 @@
 [dependencies]
-cl-traits = { features = ["alloc", "with_derive"], path = "../cl-traits" }
+cl-traits = { features = ["alloc", "with-derive"], path = "../cl-traits" }
 
 [[example]]
 name = "macros"

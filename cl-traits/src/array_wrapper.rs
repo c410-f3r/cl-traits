@@ -7,20 +7,13 @@ use core::{
   ops::{Deref, DerefMut, Index, IndexMut},
   slice::{Iter, IterMut, SliceIndex},
 };
-#[cfg(feature = "with_serde")]
+#[cfg(feature = "with-serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-#[cfg(feature = "with_arrayvec")]
-/// A shortcut for `ArrayVec<ArrayWrapper<A>>`
-pub type ArrayVecArrayWrapper<A> = arrayvec::ArrayVec<ArrayWrapper<A>>;
-#[cfg(feature = "with_smallvec")]
-/// A shortcut for `SmallVec<ArrayWrapper<A>>`
-pub type SmallVecArrayWrapper<A> = smallvec::SmallVec<ArrayWrapper<A>>;
 
 /// With `const_generics` feature, wraps an arbitrary length array. Otherwise, wraps an
 /// array with up to 32 elements. Necessary for third-party and std implementations.
 ///
-/// This structure will be removed once `const generics` is stabilized.
+/// This structure will be removed once `const_generics` is stabilized.
 pub struct ArrayWrapper<A> {
   pub(crate) array: A,
 }
@@ -35,7 +28,7 @@ where
   }
 }
 
-#[cfg(feature = "with_arrayvec")]
+#[cfg(feature = "with-arrayvec")]
 unsafe impl<A> arrayvec::Array for ArrayWrapper<A>
 where
   A: Array,
@@ -54,7 +47,7 @@ where
   }
 }
 
-#[cfg(feature = "with_smallvec")]
+#[cfg(feature = "with-smallvec")]
 unsafe impl<A> smallvec::Array for ArrayWrapper<A>
 where
   A: Array,
@@ -66,7 +59,7 @@ where
   }
 }
 
-#[cfg(feature = "with_serde")]
+#[cfg(feature = "with-serde")]
 impl<'de, A, T> Deserialize<'de> for ArrayWrapper<A>
 where
   A: Array<Item = T>,
@@ -115,7 +108,7 @@ where
   }
 }
 
-#[cfg(feature = "with_serde")]
+#[cfg(feature = "with-serde")]
 impl<A> Serialize for ArrayWrapper<A>
 where
   A: Array,
@@ -126,6 +119,25 @@ where
     S: Serializer,
   {
     serializer.collect_seq(self)
+  }
+}
+
+#[cfg(feature = "with-tinyvec")]
+impl<A> tinyvec::Array for ArrayWrapper<A>
+where
+  A: Array,
+  A::Item: Default
+{
+  const CAPACITY: usize = A::CAPACITY;
+
+  type Item = A::Item;
+
+  fn as_slice(&self) -> &[Self::Item] {
+    self.array.slice()
+  }
+
+  fn as_slice_mut(&mut self) -> &mut [Self::Item] {
+    self.array.slice_mut()
   }
 }
 

@@ -4,17 +4,19 @@ cl-traits-derive = { optional = true, path = "../cl-traits-derive", version = "0
 serde = { default-features = false, optional = true, version = "1.0" }
 smallvec = { default-features = false, optional = true, version = "1.2" }
 staticvec = { default-features = false, optional = true, version = "0.9" }
+tinyvec = { default-features = false, optional = true, version = "0.3" }
 
 [features]
-alloc = ["serde/alloc"]
-const_generics = []
+alloc = ["serde/alloc", "tinyvec/alloc"]
+const-generics = []
 default = []
 std = ["alloc", "arrayvec/std", "serde/std"]
-with_arrayvec = ["arrayvec"]
-with_derive = ["cl-traits-derive"]
-with_serde = ["arrayvec/serde", "smallvec/serde", "serde"]
-with_smallvec = ["smallvec"]
-with_staticvec = ["const_generics", "staticvec", "staticvec/serde_support", "staticvec/std"]
+with-arrayvec = ["arrayvec"]
+with-derive = ["cl-traits-derive"]
+with-serde = ["arrayvec/serde", "smallvec/serde", "serde"]
+with-smallvec = ["smallvec"]
+with-staticvec = ["const-generics", "staticvec", "staticvec/serde_support", "staticvec/std"]
+with-tinyvec = ["tinyvec"]
 
 [package]
 authors = ["Caio Fernandes <c410.f3r@gmail.com>"]

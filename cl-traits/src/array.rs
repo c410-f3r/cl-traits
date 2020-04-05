@@ -3,7 +3,7 @@
 /// With `const_generics` feature, generalizes arbitrary length arrays. Otherwise, generalizes
 /// arrays with up to 32 elements.
 ///
-/// This trait will be removed once `const generics` is stabilized.
+/// This trait will be removed once `const_generics` is stabilized.
 pub trait Array {
   /// How many elements the array holds
   const CAPACITY: usize;

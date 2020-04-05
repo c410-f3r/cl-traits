@@ -26,7 +26,7 @@ impl<T> Storage for alloc::vec::Vec<T> {
   type Item = T;
 }
 
-#[cfg(feature = "with_arrayvec")]
+#[cfg(feature = "with-arrayvec")]
 impl<A> Storage for arrayvec::ArrayVec<ArrayWrapper<A>>
 where
   A: Array,
@@ -34,7 +34,7 @@ where
   type Item = A::Item;
 }
 
-#[cfg(feature = "with_smallvec")]
+#[cfg(feature = "with-smallvec")]
 impl<A> Storage for smallvec::SmallVec<ArrayWrapper<A>>
 where
   A: Array,
@@ -42,7 +42,25 @@ where
   type Item = A::Item;
 }
 
-#[cfg(feature = "with_staticvec")]
+#[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Storage for staticvec::StaticVec<T, N> {
   type Item = T;
+}
+
+#[cfg(feature = "with-tinyvec")]
+impl<A> Storage for tinyvec::ArrayVec<ArrayWrapper<A>>
+where
+  A: Array,
+  A::Item: Default
+{
+  type Item = A::Item;
+}
+
+#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+impl<A> Storage for tinyvec::TinyVec<ArrayWrapper<A>>
+where
+  A: Array,
+  A::Item: Default
+{
+  type Item = A::Item;
 }
