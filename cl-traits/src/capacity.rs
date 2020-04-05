@@ -4,7 +4,7 @@ use crate::{Array, ArrayWrapper};
 pub trait Capacity {
   /// Output
   type Output;
-  
+
   /// The number of elements that the implementation is able to store, not necessary equal
   /// to its length.
   fn capacity(&self) -> Self::Output;
@@ -139,4 +139,3 @@ where
     self.capacity()
   }
 }
-

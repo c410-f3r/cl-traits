@@ -51,7 +51,7 @@ impl<T, const N: usize> Storage for staticvec::StaticVec<T, N> {
 impl<A> Storage for tinyvec::ArrayVec<ArrayWrapper<A>>
 where
   A: Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Item = A::Item;
 }
@@ -60,7 +60,7 @@ where
 impl<A> Storage for tinyvec::TinyVec<ArrayWrapper<A>>
 where
   A: Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Item = A::Item;
 }

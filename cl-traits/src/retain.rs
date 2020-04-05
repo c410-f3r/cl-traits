@@ -15,8 +15,7 @@ pub trait Retain {
 /// assert_eq!(&structure, &[2]);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Retain for alloc::vec::Vec<T>
-{
+impl<T> Retain for alloc::vec::Vec<T> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 
@@ -67,8 +66,7 @@ where
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(feature = "with-staticvec")]
-impl<T, const N: usize> Retain for staticvec::StaticVec<T, N>
-{
+impl<T, const N: usize> Retain for staticvec::StaticVec<T, N> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 

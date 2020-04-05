@@ -10,10 +10,10 @@ use core::{
 #[cfg(feature = "with-serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-/// With `const_generics` feature, wraps an arbitrary length array. Otherwise, wraps an
+/// With `const-generics` feature, wraps an arbitrary length array. Otherwise, wraps an
 /// array with up to 32 elements. Necessary for third-party and std implementations.
 ///
-/// This structure will be removed once `const_generics` is stabilized.
+/// This structure will be removed once `const-generics` is stabilized.
 pub struct ArrayWrapper<A> {
   pub(crate) array: A,
 }
@@ -126,7 +126,7 @@ where
 impl<A> tinyvec::Array for ArrayWrapper<A>
 where
   A: Array,
-  A::Item: Default
+  A::Item: Default,
 {
   const CAPACITY: usize = A::CAPACITY;
 

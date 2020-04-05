@@ -12,10 +12,11 @@
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-mod array_wrapper;
 mod array;
+mod array_wrapper;
 mod capacity;
 mod clear;
+pub mod doc_tests;
 mod insert;
 mod length;
 mod macros;
@@ -27,7 +28,6 @@ mod swap;
 mod truncate;
 mod utils;
 mod with_capacity;
-pub mod doc_tests;
 
 pub use array::*;
 pub use array_wrapper::*;

@@ -84,7 +84,7 @@ impl<T, const N: usize> Remove for staticvec::StaticVec<T, N> {
 impl<A> Remove for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = usize;
   type Output = A::Item;
@@ -103,7 +103,7 @@ where
 impl<A> Remove for tinyvec::TinyVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = usize;
   type Output = A::Item;

@@ -84,7 +84,7 @@ impl<T, const N: usize> Truncate for staticvec::StaticVec<T, N> {
 impl<A> Truncate for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = usize;
   type Output = ();
@@ -103,7 +103,7 @@ where
 impl<A> Truncate for tinyvec::TinyVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = usize;
   type Output = ();

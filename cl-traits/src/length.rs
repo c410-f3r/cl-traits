@@ -4,7 +4,7 @@ use crate::{Array, ArrayWrapper};
 pub trait Length {
   /// Output
   type Output;
-  
+
   /// Holds a certain number of elements.
   fn length(&self) -> Self::Output;
 }
@@ -113,7 +113,7 @@ impl<T, const N: usize> Length for staticvec::StaticVec<T, N> {
 impl<A> Length for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Output = usize;
 
@@ -130,7 +130,7 @@ where
 impl<A> Length for tinyvec::TinyVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Output = usize;
 

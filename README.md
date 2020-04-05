@@ -12,7 +12,6 @@ Many data structures have unique features that make it difficult or even impossi
 
 ## Examples
 
-
 ```rust
 use cl_traits::*;
 

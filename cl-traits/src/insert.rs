@@ -84,7 +84,7 @@ impl<T, const N: usize> Insert for staticvec::StaticVec<T, N> {
 impl<A> Insert for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = (usize, A::Item);
   type Output = ();
@@ -103,7 +103,7 @@ where
 impl<A> Insert for tinyvec::TinyVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = (usize, A::Item);
   type Output = ();

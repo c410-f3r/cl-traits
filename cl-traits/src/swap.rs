@@ -124,7 +124,7 @@ impl<T, const N: usize> Swap for staticvec::StaticVec<T, N> {
 impl<A> Swap for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = (usize, usize);
   type Output = ();
@@ -144,7 +144,7 @@ where
 impl<A> Swap for tinyvec::TinyVec<crate::ArrayWrapper<A>>
 where
   A: crate::Array,
-  A::Item: Default
+  A::Item: Default,
 {
   type Input = (usize, usize);
   type Output = ();
