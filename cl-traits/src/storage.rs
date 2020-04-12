@@ -6,6 +6,10 @@ pub trait Storage {
   type Item;
 }
 
+impl<T> Storage for Option<T> {
+  type Item = T;
+}
+
 impl<A> Storage for ArrayWrapper<A>
 where
   A: Array,
