@@ -8,6 +8,19 @@ pub trait Clear {
 }
 
 /// ```rust
+/// let mut opt = Some(0);
+/// cl_traits::Clear::clear(&mut opt);
+/// assert_eq!(opt, None);
+/// ```
+impl<T> Clear for Option<T> {
+  type Output = ();
+
+  fn clear(&mut self) {
+    self.take();
+  }
+}
+
+/// ```rust
 /// let mut structure = cl_traits::doc_tests::vec();
 /// cl_traits::Clear::clear(&mut structure);
 /// assert_eq!(structure.len(), 0);
@@ -16,7 +29,7 @@ pub trait Clear {
 impl<T> Clear for alloc::vec::Vec<T> {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }
@@ -33,7 +46,7 @@ where
 {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }
@@ -50,7 +63,7 @@ where
 {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }
@@ -64,7 +77,7 @@ where
 impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }
@@ -82,7 +95,7 @@ where
 {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }
@@ -100,7 +113,7 @@ where
 {
   type Output = ();
 
-  fn clear(&mut self) -> Self::Output {
+  fn clear(&mut self) {
     self.clear()
   }
 }

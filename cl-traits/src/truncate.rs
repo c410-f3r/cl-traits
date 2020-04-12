@@ -10,6 +10,21 @@ pub trait Truncate {
 }
 
 /// ```rust
+/// let structure: Option<i32> = cl_traits::WithCapacity::with_capacity(Default::default());
+/// assert_eq!(structure, None);
+/// ```
+impl<T> Truncate for Option<T> {
+  type Input = usize;
+  type Output = ();
+
+  fn truncate(&mut self, input: Self::Input) {
+    if input == 0 {
+      *self = None;
+    }
+  }
+}
+
+/// ```rust
 /// let mut structure = cl_traits::doc_tests::vec();
 /// cl_traits::Truncate::truncate(&mut structure, 1);
 /// assert_eq!(structure.len(), 1);

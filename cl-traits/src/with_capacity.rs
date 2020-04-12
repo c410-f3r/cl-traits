@@ -8,6 +8,18 @@ pub trait WithCapacity {
 }
 
 /// ```rust
+/// let structure: Option<i32> = cl_traits::WithCapacity::with_capacity(Default::default());
+/// assert_eq!(structure, None);
+/// ```
+impl<T> WithCapacity for Option<T> {
+  type Input = usize;
+
+  fn with_capacity(_: Self::Input) -> Self {
+    None
+  }
+}
+
+/// ```rust
 /// let structure: Vec<i32> = cl_traits::WithCapacity::with_capacity(2);
 /// assert_eq!(structure.capacity(), 2);
 /// ```

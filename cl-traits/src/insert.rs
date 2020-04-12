@@ -10,6 +10,20 @@ pub trait Insert {
 }
 
 /// ```rust
+/// let mut opt = None;
+/// cl_traits::Insert::insert(&mut opt, 3);
+/// assert_eq!(opt, Some(3));
+/// ```
+impl<T> Insert for Option<T> {
+  type Input = T;
+  type Output = ();
+
+  fn insert(&mut self, input: Self::Input) {
+    *self = Some(input);
+  }
+}
+
+/// ```rust
 /// let mut structure = cl_traits::doc_tests::vec();
 /// cl_traits::Insert::insert(&mut structure, (0, 10));
 /// assert_eq!(structure.get(0), Some(&10));
@@ -89,7 +103,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
-  fn insert(&mut self, input: Self::Input) -> Self::Output {
+  fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
 }
@@ -108,7 +122,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
-  fn insert(&mut self, input: Self::Input) -> Self::Output {
+  fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
 }

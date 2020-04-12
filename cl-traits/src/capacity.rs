@@ -11,6 +11,17 @@ pub trait Capacity {
 }
 
 /// ```rust
+/// assert_eq!(cl_traits::Capacity::capacity(&Some(0)), 1);
+/// ```
+impl<T> Capacity for Option<T> {
+  type Output = usize;
+
+  fn capacity(&self) -> Self::Output {
+    1
+  }
+}
+
+/// ```rust
 /// let mut structure = cl_traits::doc_tests::array_wrapper();
 /// assert_eq!(cl_traits::Capacity::capacity(&structure), 3);
 /// ```

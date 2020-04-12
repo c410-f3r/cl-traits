@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-APACHE2-blue.svg)](./LICENSE)
 [![Rustc](https://img.shields.io/badge/rustc-1.42-lightgray")](https://blog.rust-lang.org/2020/03/12/Rust-1.42.html)
 
-Yet another library that generalizes collections. This is a best effort without GAT.
+Yet another library that generalizes collections. This is a best effort without GAT and !.
 
 Many data structures have unique features that make it difficult or even impossible to create a single `trait` that fits all. This crate tries to circumvent such behaviour by providing a single method for each `trait` to achieve maximum flexibility and freedom.
 

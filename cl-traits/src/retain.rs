@@ -10,6 +10,24 @@ pub trait Retain {
 }
 
 /// ```rust
+/// let mut opt = Some(1);
+/// cl_traits::Retain::retain(&mut opt, |n| n % 2 == 0);
+/// assert_eq!(opt, None);
+/// ```
+impl<T> Retain for Option<T> {
+  type Fn = fn(&T) -> bool;
+  type Output = ();
+
+  fn retain(&mut self, input: Self::Fn) {
+    if let Some(elem) = self {
+      if !input(elem) {
+        *self = None;
+      }
+    }
+  }
+}
+
+/// ```rust
 /// let mut structure = cl_traits::doc_tests::vec();
 /// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
 /// assert_eq!(&structure, &[2]);

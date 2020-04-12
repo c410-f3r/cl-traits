@@ -10,10 +10,10 @@ dependencies = [
 
 [[package]]
 name = "cl-traits"
-version = "1.4.1"
+version = "2.0.0"
 dependencies = [
  "arrayvec 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cl-traits-derive 0.4.1",
+ "cl-traits-derive 1.0.0",
  "serde 1.0.106 (registry+https://github.com/rust-lang/crates.io-index)",
  "smallvec 1.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "staticvec 0.9.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -22,7 +22,7 @@ dependencies = [
 
 [[package]]
 name = "cl-traits-derive"
-version = "0.4.1"
+version = "1.0.0"
 dependencies = [
  "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.6.13 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -33,7 +33,7 @@ dependencies = [
 name = "examples"
 version = "0.0.0"
 dependencies = [
- "cl-traits 1.4.1",
+ "cl-traits 2.0.0",
 ]
 
 [[package]]

@@ -9,7 +9,7 @@ create_and_impl_marker_trait!(
   GenericVector: Capacity<Output = usize>,
   Clear<Output = ()>,
   Length<Output = usize>,
-  Swap<Input = (usize, usize), Output = ()>,
+  Swap<Input = [usize; 2], Output = ()>,
   Truncate<Input = usize, Output = ()>
 );
 

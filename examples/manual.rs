@@ -7,7 +7,7 @@ trait GenericVector<E>:
   + Clear<Output = ()>
   + Length<Output = usize>
   + Push<Input = E, Output = ()>
-  + Swap<Input = (usize, usize), Output = ()>
+  + Swap<Input = [usize; 2], Output = ()>
   + Truncate<Input = usize, Output = ()>
 {
 }
@@ -17,7 +17,7 @@ impl<E, T> GenericVector<E> for T where
     + Clear<Output = ()>
     + Length<Output = usize>
     + Push<Input = E, Output = ()>
-    + Swap<Input = (usize, usize), Output = ()>
+    + Swap<Input = [usize; 2], Output = ()>
     + Truncate<Input = usize, Output = ()>
 {
 }
@@ -58,7 +58,7 @@ impl<E> Push for SomeCustomVector<E> {
 }
 
 impl<T> Swap for SomeCustomVector<T> {
-  type Input = (usize, usize);
+  type Input = [usize; 2];
   type Output = ();
 
   fn swap(&mut self, input: Self::Input) -> Self::Output {

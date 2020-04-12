@@ -10,6 +10,20 @@ pub trait Length {
 }
 
 /// ```rust
+/// let mut opt = Some(0);
+/// assert_eq!(cl_traits::Length::length(&opt), 1);
+/// opt.take();
+/// assert_eq!(cl_traits::Length::length(&opt), 0);
+/// ```
+impl<T> Length for Option<T> {
+  type Output = usize;
+
+  fn length(&self) -> Self::Output {
+    self.is_some() as usize
+  }
+}
+
+/// ```rust
 /// let structure = cl_traits::doc_tests::slice();
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
