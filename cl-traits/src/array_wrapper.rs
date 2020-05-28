@@ -11,7 +11,7 @@ use core::{
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// With `const-generics` feature, wraps an arbitrary length array. Otherwise, wraps an
-/// array with up to 32 elements. Necessary for third-party and std implementations.
+/// array with a selected number of elements. Necessary for third-party and std implementations.
 ///
 /// This structure will be removed once `const-generics` is stabilized.
 pub struct ArrayWrapper<A> {
