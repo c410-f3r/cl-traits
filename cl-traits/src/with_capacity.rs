@@ -1,3 +1,5 @@
+use crate::ArrayWrapper;
+
 /// See [`with_capacity`](WithCapacity::with_capacity) for more information.
 pub trait WithCapacity {
   /// Input
@@ -5,6 +7,24 @@ pub trait WithCapacity {
 
   /// Creates a new instance based on an initial holding capacity provided by `Input`.
   fn with_capacity(input: Self::Input) -> Self;
+}
+
+/// ```rust
+/// use cl_traits::Capacity;
+/// let structure: cl_traits::ArrayWrapper<[i32; 5]>;
+/// structure = cl_traits::WithCapacity::with_capacity(Default::default());
+/// assert_eq!(structure.capacity(), 5);
+/// ```
+impl<A> WithCapacity for ArrayWrapper<A>
+where
+  A: crate::Array,
+  A::Item: Default,
+{
+  type Input = usize;
+
+  fn with_capacity(_: Self::Input) -> Self {
+    ArrayWrapper::default()
+  }
 }
 
 /// ```rust
