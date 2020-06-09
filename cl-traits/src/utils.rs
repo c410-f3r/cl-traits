@@ -8,8 +8,8 @@ where
   A: Array,
   F: FnMut(usize) -> A::Item,
 {
+  let mut array: MaybeUninit<A> = MaybeUninit::uninit();
   unsafe {
-    let mut array: MaybeUninit<A> = MaybeUninit::uninit();
     for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
       ptr::write(value_ptr, cb(idx));
     }

@@ -1,5 +1,5 @@
 [dependencies]
-cl-traits = { features = ["alloc", "with-derive"], path = "../cl-traits" }
+cl-traits = { features = ["alloc", "with-cl-traits-derive"], path = "../cl-traits" }
 
 [[example]]
 name = "macros"
@@ -11,6 +11,7 @@ path = "manual.rs"
 
 [package]
 edition = "2018"
-name = "examples"
+license = "Apache-2.0"
+name = "cl-traits-examples"
 publish = false
 version = "0.0.0"

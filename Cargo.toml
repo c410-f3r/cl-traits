@@ -2,5 +2,5 @@
 members = [
     "cl-traits",
     "cl-traits-derive",
-    "examples",
+    "cl-traits-examples",
 ]

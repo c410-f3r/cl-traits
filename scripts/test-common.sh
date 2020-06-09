@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
-set -e
+set -eux
 
-export RUSTFLAGS='-D warnings'
+export RUSTFLAGS='
+    -D missing_docs
+    -F rust_2018_idioms
+    -F trivial_casts
+    -F unused_lifetimes
+    -F unused_qualifications
+    -F warnings
+    -F missing_debug_implementations
+'
+export RUST_BACKTRACE=full
 
 run_package_example() {
     local package=$1

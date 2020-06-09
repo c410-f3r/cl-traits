@@ -6,7 +6,6 @@
 
 #![cfg_attr(feature = "const-generics", allow(incomplete_features))]
 #![cfg_attr(feature = "const-generics", feature(const_generics))]
-#![forbid(missing_debug_implementations, missing_docs, rust_2018_idioms)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "alloc")]
@@ -32,7 +31,7 @@ mod with_capacity;
 pub use array::*;
 pub use array_wrapper::*;
 pub use capacity::*;
-#[cfg(feature = "with-derive")]
+#[cfg(feature = "with-cl-traits-derive")]
 pub use cl_traits_derive::*;
 pub use clear::*;
 pub use insert::*;
