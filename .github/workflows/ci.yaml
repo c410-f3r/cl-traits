@@ -7,15 +7,23 @@ on:
       - master
 
 jobs:
-  rust:
-    name: Rust
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    env:
-      RUSTFLAGS: -D warnings
+  cargo-audit:
+    name: Cargo audit
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-audit
+        use-tool-cache: true
+
+    - run: cargo audit
+
+  everything:
+    name: Everything
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -27,6 +35,8 @@ jobs:
           profile: minimal
           override: true
           components: clippy, rustfmt
+
+      - run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
 
       - name: Cache cargo registry
         uses: actions/cache@v1
@@ -59,4 +69,4 @@ jobs:
           args: --all -- --check
 
       - name: Test
-        run: ./scripts/tests.sh && ./scripts/tests-nightly.sh
+        run: ./scripts/test.sh && ./scripts/test-nightly.sh
