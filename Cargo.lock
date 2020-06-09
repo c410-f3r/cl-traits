@@ -10,7 +10,7 @@ dependencies = [
 
 [[package]]
 name = "cl-traits"
-version = "3.0.0"
+version = "4.0.0"
 dependencies = [
  "arrayvec 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cl-traits-derive 1.0.0",
@@ -33,7 +33,7 @@ dependencies = [
 name = "cl-traits-examples"
 version = "0.0.0"
 dependencies = [
- "cl-traits 3.0.0",
+ "cl-traits 4.0.0",
 ]
 
 [[package]]
