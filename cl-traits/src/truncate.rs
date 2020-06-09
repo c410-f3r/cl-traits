@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`Truncate`](Truncate::truncate) for more information.
 pub trait Truncate {
   /// Input
@@ -30,7 +33,7 @@ impl<T> Truncate for Option<T> {
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Truncate for alloc::vec::Vec<T> {
+impl<T> Truncate for Vec<T> {
   type Input = usize;
   type Output = ();
 
@@ -45,9 +48,9 @@ impl<T> Truncate for alloc::vec::Vec<T> {
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Truncate for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Truncate for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Input = usize;
   type Output = ();
@@ -63,9 +66,9 @@ where
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Truncate for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Truncate for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Input = usize;
   type Output = ();
@@ -96,9 +99,9 @@ impl<T, const N: usize> Truncate for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Truncate for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Truncate for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;
@@ -115,9 +118,9 @@ where
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Truncate for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Truncate for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;

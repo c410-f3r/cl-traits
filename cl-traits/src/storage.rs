@@ -1,4 +1,6 @@
 use crate::{Array, ArrayWrapper};
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
 
 /// Storage is anything that can hold a collection of items
 pub trait Storage {
@@ -26,22 +28,22 @@ impl<'a, T> Storage for &'a mut [T] {
 }
 
 #[cfg(feature = "alloc")]
-impl<T> Storage for alloc::vec::Vec<T> {
+impl<T> Storage for Vec<T> {
   type Item = T;
 }
 
 #[cfg(feature = "with-arrayvec")]
-impl<A> Storage for arrayvec::ArrayVec<ArrayWrapper<A>>
+impl<A> Storage for arrayvec::ArrayVec<A>
 where
-  A: Array,
+  A: arrayvec::Array,
 {
   type Item = A::Item;
 }
 
 #[cfg(feature = "with-smallvec")]
-impl<A> Storage for smallvec::SmallVec<ArrayWrapper<A>>
+impl<A> Storage for smallvec::SmallVec<A>
 where
-  A: Array,
+  A: smallvec::Array,
 {
   type Item = A::Item;
 }
@@ -52,18 +54,18 @@ impl<T, const N: usize> Storage for staticvec::StaticVec<T, N> {
 }
 
 #[cfg(feature = "with-tinyvec")]
-impl<A> Storage for tinyvec::ArrayVec<ArrayWrapper<A>>
+impl<A> Storage for tinyvec::ArrayVec<A>
 where
-  A: Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Item = A::Item;
 }
 
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Storage for tinyvec::TinyVec<ArrayWrapper<A>>
+impl<A> Storage for tinyvec::TinyVec<A>
 where
-  A: Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Item = A::Item;

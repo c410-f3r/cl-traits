@@ -1,4 +1,6 @@
 use crate::ArrayWrapper;
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
 
 /// See [`with_capacity`](WithCapacity::with_capacity) for more information.
 pub trait WithCapacity {
@@ -44,11 +46,11 @@ impl<T> WithCapacity for Option<T> {
 /// assert_eq!(structure.capacity(), 2);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> WithCapacity for alloc::vec::Vec<T> {
+impl<T> WithCapacity for Vec<T> {
   type Input = usize;
 
   fn with_capacity(input: Self::Input) -> Self {
-    alloc::vec::Vec::with_capacity(input)
+    Vec::with_capacity(input)
   }
 }
 
@@ -58,9 +60,9 @@ impl<T> WithCapacity for alloc::vec::Vec<T> {
 /// assert_eq!(structure.capacity(), 5);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> WithCapacity for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> WithCapacity for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Input = usize;
 
@@ -75,9 +77,9 @@ where
 /// assert_eq!(structure.capacity(), 5);
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> WithCapacity for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> WithCapacity for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Input = usize;
 
@@ -106,9 +108,9 @@ impl<T, const N: usize> WithCapacity for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.capacity(), 5);
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> WithCapacity for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> WithCapacity for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: Default + tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;
@@ -124,9 +126,9 @@ where
 /// assert_eq!(structure.capacity(), 5);
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> WithCapacity for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> WithCapacity for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: Default + tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;

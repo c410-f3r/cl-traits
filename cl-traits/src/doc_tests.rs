@@ -1,10 +1,12 @@
 //! Instances for documentation tests
 
 use crate::ArrayWrapper;
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
 
 /// `ArrayWrapper` with three elements
 pub fn array_wrapper() -> ArrayWrapper<[i32; 3]> {
-  crate::ArrayWrapper::new([1, 2, 3])
+  ArrayWrapper::new([1, 2, 3])
 }
 
 /// Slice with three elements
@@ -14,8 +16,8 @@ pub fn slice() -> &'static [i32] {
 
 #[cfg(feature = "alloc")]
 /// `Vec` with three elements
-pub fn vec() -> alloc::vec::Vec<i32> {
-  let mut vec = alloc::vec::Vec::with_capacity(5);
+pub fn vec() -> Vec<i32> {
+  let mut vec = Vec::with_capacity(5);
   vec.extend([1, 2, 3].iter().copied());
   vec
 }

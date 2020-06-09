@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`push`](Push::push) for more information.
 pub trait Push {
   /// Input
@@ -33,7 +36,7 @@ impl<T> Push for Option<T> {
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Push for alloc::vec::Vec<T> {
+impl<T> Push for Vec<T> {
   type Input = T;
   type Output = ();
 
@@ -48,9 +51,9 @@ impl<T> Push for alloc::vec::Vec<T> {
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Push for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Push for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Input = A::Item;
   type Output = ();
@@ -66,9 +69,9 @@ where
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Push for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Push for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Input = A::Item;
   type Output = ();
@@ -99,9 +102,9 @@ impl<T, const N: usize> Push for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Push for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Push for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = A::Item;
@@ -118,9 +121,9 @@ where
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Push for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Push for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = A::Item;

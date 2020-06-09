@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`insert`](Insert::insert) for more information.
 pub trait Insert {
   /// Input
@@ -29,7 +32,7 @@ impl<T> Insert for Option<T> {
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Insert for alloc::vec::Vec<T> {
+impl<T> Insert for Vec<T> {
   type Input = (usize, T);
   type Output = ();
 
@@ -44,9 +47,9 @@ impl<T> Insert for alloc::vec::Vec<T> {
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Insert for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Insert for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Input = (usize, A::Item);
   type Output = ();
@@ -62,9 +65,9 @@ where
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Insert for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Insert for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Input = (usize, A::Item);
   type Output = ();
@@ -95,9 +98,9 @@ impl<T, const N: usize> Insert for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Insert for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Insert for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = (usize, A::Item);
@@ -114,9 +117,9 @@ where
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Insert for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Insert for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = (usize, A::Item);

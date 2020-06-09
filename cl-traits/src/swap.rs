@@ -1,4 +1,6 @@
 use crate::{Array, ArrayWrapper};
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
 
 /// See [`Swap`](Swap::swap) for more information.
 pub trait Swap {
@@ -51,7 +53,7 @@ impl<'a, T> Swap for &'a mut [T] {
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Swap for alloc::vec::Vec<T> {
+impl<T> Swap for Vec<T> {
   type Input = [usize; 2];
   type Output = ();
 
@@ -67,9 +69,9 @@ impl<T> Swap for alloc::vec::Vec<T> {
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Swap for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Swap for arrayvec::ArrayVec<A>
 where
-  A: Array,
+  A: arrayvec::Array,
 {
   type Input = [usize; 2];
   type Output = ();
@@ -86,9 +88,9 @@ where
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Swap for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Swap for smallvec::SmallVec<A>
 where
-  A: Array,
+  A: smallvec::Array,
 {
   type Input = [usize; 2];
   type Output = ();
@@ -121,9 +123,9 @@ impl<T, const N: usize> Swap for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Swap for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Swap for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = [usize; 2];
@@ -141,9 +143,9 @@ where
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Swap for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Swap for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = [usize; 2];

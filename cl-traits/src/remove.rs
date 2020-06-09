@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`remove`](Remove::remove) for more information.
 pub trait Remove {
   /// Input
@@ -15,7 +18,7 @@ pub trait Remove {
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Remove for alloc::vec::Vec<T> {
+impl<T> Remove for Vec<T> {
   type Input = usize;
   type Output = T;
 
@@ -30,9 +33,9 @@ impl<T> Remove for alloc::vec::Vec<T> {
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Remove for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Remove for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Input = usize;
   type Output = A::Item;
@@ -48,9 +51,9 @@ where
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Remove for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Remove for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Input = usize;
   type Output = A::Item;
@@ -81,9 +84,9 @@ impl<T, const N: usize> Remove for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Remove for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Remove for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;
@@ -100,9 +103,9 @@ where
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Remove for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Remove for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = usize;

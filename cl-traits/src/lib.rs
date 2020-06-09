@@ -8,7 +8,7 @@
 #![cfg_attr(feature = "const-generics", feature(const_generics))]
 #![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(feature = "alloc")]
+#[cfg(all(feature = "alloc", not(feature = "std")))]
 extern crate alloc;
 
 mod array;

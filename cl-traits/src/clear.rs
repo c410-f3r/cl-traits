@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`clear`](Clear::clear) for more information.
 pub trait Clear {
   /// Output
@@ -26,7 +29,7 @@ impl<T> Clear for Option<T> {
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Clear for alloc::vec::Vec<T> {
+impl<T> Clear for Vec<T> {
   type Output = ();
 
   fn clear(&mut self) {
@@ -40,9 +43,9 @@ impl<T> Clear for alloc::vec::Vec<T> {
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Clear for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Clear for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Output = ();
 
@@ -57,9 +60,9 @@ where
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Clear for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Clear for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Output = ();
 
@@ -88,9 +91,9 @@ impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Clear for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Clear for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Output = ();
@@ -106,9 +109,9 @@ where
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Clear for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Clear for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Output = ();

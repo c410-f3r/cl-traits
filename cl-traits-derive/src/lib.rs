@@ -1,4 +1,4 @@
-extern crate proc_macro;
+#![allow(missing_docs)]
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::{quote, quote_spanned, ToTokens};

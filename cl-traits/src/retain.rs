@@ -1,3 +1,6 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
+
 /// See [`retain`](Retain::retain) for more information.
 pub trait Retain {
   /// Function
@@ -33,7 +36,7 @@ impl<T> Retain for Option<T> {
 /// assert_eq!(&structure, &[2]);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Retain for alloc::vec::Vec<T> {
+impl<T> Retain for Vec<T> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 
@@ -48,9 +51,9 @@ impl<T> Retain for alloc::vec::Vec<T> {
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Retain for arrayvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Retain for arrayvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: arrayvec::Array,
 {
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
@@ -66,9 +69,9 @@ where
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Retain for smallvec::SmallVec<crate::ArrayWrapper<A>>
+impl<A> Retain for smallvec::SmallVec<A>
 where
-  A: crate::Array,
+  A: smallvec::Array,
 {
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
@@ -99,9 +102,9 @@ impl<T, const N: usize> Retain for staticvec::StaticVec<T, N> {
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Retain for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Retain for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Fn = fn(&A::Item) -> bool;
@@ -118,9 +121,9 @@ where
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Retain for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Retain for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Fn = fn(&A::Item) -> bool;

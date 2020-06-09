@@ -1,4 +1,6 @@
 use crate::{Array, ArrayWrapper};
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use alloc::vec::Vec;
 
 /// See [`length`](Length::length) for more information.
 pub trait Length {
@@ -66,7 +68,7 @@ where
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(feature = "alloc")]
-impl<T> Length for alloc::vec::Vec<T> {
+impl<T> Length for Vec<T> {
   type Output = usize;
 
   fn length(&self) -> Self::Output {
@@ -79,9 +81,9 @@ impl<T> Length for alloc::vec::Vec<T> {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Length for arrayvec::ArrayVec<ArrayWrapper<A>>
+impl<A> Length for arrayvec::ArrayVec<A>
 where
-  A: Array,
+  A: arrayvec::Array,
 {
   type Output = usize;
 
@@ -95,9 +97,9 @@ where
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(feature = "with-smallvec")]
-impl<A> Length for smallvec::SmallVec<ArrayWrapper<A>>
+impl<A> Length for smallvec::SmallVec<A>
 where
-  A: Array,
+  A: smallvec::Array,
 {
   type Output = usize;
 
@@ -124,9 +126,9 @@ impl<T, const N: usize> Length for staticvec::StaticVec<T, N> {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(feature = "with-tinyvec")]
-impl<A> Length for tinyvec::ArrayVec<crate::ArrayWrapper<A>>
+impl<A> Length for tinyvec::ArrayVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Output = usize;
@@ -141,9 +143,9 @@ where
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
-impl<A> Length for tinyvec::TinyVec<crate::ArrayWrapper<A>>
+impl<A> Length for tinyvec::TinyVec<A>
 where
-  A: crate::Array,
+  A: tinyvec::Array,
   A::Item: Default,
 {
   type Output = usize;
