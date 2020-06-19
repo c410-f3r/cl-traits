@@ -92,17 +92,13 @@ where
       where
         SA: SeqAccess<'de>,
       {
-        let array = unsafe {
-          let mut array: core::mem::MaybeUninit<A> = core::mem::MaybeUninit::uninit();
-          for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
-            if let Some(value) = seq.next_element()? {
-              core::ptr::write(value_ptr, value);
-            } else {
-              return Err(SA::Error::invalid_length(idx, &self));
-            }
+        let array = crate::create_array_rslt(|idx| {
+          if let Some(value) = seq.next_element()? {
+            Ok(value)
+          } else {
+            return Err(SA::Error::invalid_length(idx, &self));
           }
-          array.assume_init()
-        };
+        })?;
         Ok(ArrayWrapper { array })
       }
     }
