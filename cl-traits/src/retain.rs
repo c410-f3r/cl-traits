@@ -21,6 +21,7 @@ impl<T> Retain for Option<T> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     if let Some(elem) = self {
       if !input(elem) {
@@ -40,6 +41,7 @@ impl<T> Retain for Vec<T> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }
@@ -58,6 +60,7 @@ where
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(|i| input(i))
   }
@@ -76,6 +79,7 @@ where
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(|i| input(i))
   }
@@ -91,6 +95,7 @@ impl<T, const N: usize> Retain for staticvec::StaticVec<T, N> {
   type Fn = fn(&T) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }
@@ -110,6 +115,7 @@ where
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }
@@ -129,6 +135,7 @@ where
   type Fn = fn(&A::Item) -> bool;
   type Output = ();
 
+  #[inline]
   fn retain(&mut self, input: Self::Fn) {
     self.retain(input)
   }

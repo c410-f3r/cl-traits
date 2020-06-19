@@ -23,10 +23,12 @@ impl<T, const N: usize> Array for [T; N] {
   const CAPACITY: usize = N;
   type Item = T;
 
+  #[inline]
   fn slice(&self) -> &[Self::Item] {
     &self[..]
   }
 
+  #[inline]
   fn slice_mut(&mut self) -> &mut [Self::Item] {
     &mut self[..]
   }

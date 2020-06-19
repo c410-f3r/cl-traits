@@ -20,6 +20,7 @@ impl<T> Truncate for Option<T> {
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     if input == 0 {
       *self = None;
@@ -37,6 +38,7 @@ impl<T> Truncate for Vec<T> {
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }
@@ -55,6 +57,7 @@ where
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }
@@ -73,6 +76,7 @@ where
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }
@@ -88,6 +92,7 @@ impl<T, const N: usize> Truncate for staticvec::StaticVec<T, N> {
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }
@@ -107,6 +112,7 @@ where
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }
@@ -126,6 +132,7 @@ where
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) {
     self.truncate(input)
   }

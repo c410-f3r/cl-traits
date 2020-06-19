@@ -26,6 +26,7 @@ where
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.array.slice_mut().swap(a, b)
   }
@@ -41,6 +42,7 @@ impl<'a, T> Swap for &'a mut [T] {
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut().swap(a, b)
   }
@@ -57,6 +59,7 @@ impl<T> Swap for Vec<T> {
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }
@@ -76,6 +79,7 @@ where
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }
@@ -95,6 +99,7 @@ where
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }
@@ -111,6 +116,7 @@ impl<T, const N: usize> Swap for staticvec::StaticVec<T, N> {
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }
@@ -131,6 +137,7 @@ where
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }
@@ -151,6 +158,7 @@ where
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) {
     self.as_mut_slice().swap(a, b)
   }

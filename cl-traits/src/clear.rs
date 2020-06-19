@@ -18,6 +18,7 @@ pub trait Clear {
 impl<T> Clear for Option<T> {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.take();
   }
@@ -32,6 +33,7 @@ impl<T> Clear for Option<T> {
 impl<T> Clear for Vec<T> {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }
@@ -49,6 +51,7 @@ where
 {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }
@@ -66,6 +69,7 @@ where
 {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }
@@ -80,6 +84,7 @@ where
 impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }
@@ -98,6 +103,7 @@ where
 {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }
@@ -116,6 +122,7 @@ where
 {
   type Output = ();
 
+  #[inline]
   fn clear(&mut self) {
     self.clear()
   }

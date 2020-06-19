@@ -38,10 +38,12 @@ where
 
   const CAPACITY: usize = A::CAPACITY;
 
+  #[inline]
   fn as_slice(&self) -> &[Self::Item] {
     self.array.slice()
   }
 
+  #[inline]
   fn as_mut_slice(&mut self) -> &mut [Self::Item] {
     self.array.slice_mut()
   }
@@ -54,6 +56,7 @@ where
 {
   type Item = A::Item;
 
+  #[inline]
   fn size() -> usize {
     A::CAPACITY
   }
@@ -114,6 +117,7 @@ where
   A: Array,
   A::Item: Serialize,
 {
+  #[inline]
   fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
   where
     S: Serializer,
@@ -132,10 +136,12 @@ where
 
   type Item = A::Item;
 
+  #[inline]
   fn as_slice(&self) -> &[Self::Item] {
     self.array.slice()
   }
 
+  #[inline]
   fn as_slice_mut(&mut self) -> &mut [Self::Item] {
     self.array.slice_mut()
   }
@@ -165,6 +171,7 @@ impl<A> AsMut<A> for ArrayWrapper<A>
 where
   A: Array,
 {
+  #[inline]
   fn as_mut(&mut self) -> &mut A {
     &mut self.array
   }
@@ -174,6 +181,7 @@ impl<A> AsMut<[A::Item]> for ArrayWrapper<A>
 where
   A: Array,
 {
+  #[inline]
   fn as_mut(&mut self) -> &mut [A::Item] {
     self.array.slice_mut()
   }
@@ -295,7 +303,11 @@ where
 
   #[inline]
   fn index(&self, idx: I) -> &Self::Output {
-    &self.array.slice()[idx]
+    if let Some(r) = self.array.slice().get(idx) {
+      r
+    } else {
+      panic!("Index out of bounds");
+    }
   }
 }
 
@@ -306,7 +318,11 @@ where
 {
   #[inline]
   fn index_mut(&mut self, idx: I) -> &mut Self::Output {
-    &mut self.array.slice_mut()[idx]
+    if let Some(r) = self.array.slice_mut().get_mut(idx) {
+      r
+    } else {
+      panic!("Index out of bounds");
+    }
   }
 }
 

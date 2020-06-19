@@ -24,6 +24,7 @@ where
 {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     ArrayWrapper::default()
   }
@@ -36,6 +37,7 @@ where
 impl<T> WithCapacity for Option<T> {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     None
   }
@@ -49,6 +51,7 @@ impl<T> WithCapacity for Option<T> {
 impl<T> WithCapacity for Vec<T> {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(input: Self::Input) -> Self {
     Vec::with_capacity(input)
   }
@@ -66,6 +69,7 @@ where
 {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     arrayvec::ArrayVec::new()
   }
@@ -83,6 +87,7 @@ where
 {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(input: Self::Input) -> Self {
     smallvec::SmallVec::with_capacity(input)
   }
@@ -97,6 +102,7 @@ where
 impl<T, const N: usize> WithCapacity for staticvec::StaticVec<T, N> {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     staticvec::StaticVec::new()
   }
@@ -115,6 +121,7 @@ where
 {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     tinyvec::ArrayVec::new()
   }
@@ -133,6 +140,7 @@ where
 {
   type Input = usize;
 
+  #[inline]
   fn with_capacity(_: Self::Input) -> Self {
     tinyvec::TinyVec::new()
   }

@@ -20,8 +20,13 @@ pub trait Length {
 impl<T> Length for Option<T> {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
-    self.is_some() as usize
+    if self.is_some() {
+      1
+    } else {
+      0
+    }
   }
 }
 
@@ -32,6 +37,7 @@ impl<T> Length for Option<T> {
 impl<'a, T> Length for &'a [T] {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -43,6 +49,7 @@ impl<'a, T> Length for &'a [T] {
 impl<'a, T> Length for &'a mut [T] {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -58,6 +65,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.array.slice().len()
   }
@@ -71,6 +79,7 @@ where
 impl<T> Length for Vec<T> {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -87,6 +96,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -103,6 +113,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -116,6 +127,7 @@ where
 impl<T, const N: usize> Length for staticvec::StaticVec<T, N> {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -133,6 +145,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }
@@ -150,6 +163,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn length(&self) -> Self::Output {
     self.len()
   }

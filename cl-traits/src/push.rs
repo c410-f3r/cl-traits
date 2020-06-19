@@ -21,9 +21,10 @@ impl<T> Push for Option<T> {
   type Input = T;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     if self.is_some() {
-      panic!("Exceeded capacity for Option")
+      panic!("Exceeded capacity for Option");
     } else {
       *self = Some(input);
     }
@@ -40,6 +41,7 @@ impl<T> Push for Vec<T> {
   type Input = T;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }
@@ -58,6 +60,7 @@ where
   type Input = A::Item;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }
@@ -76,6 +79,7 @@ where
   type Input = A::Item;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }
@@ -91,6 +95,7 @@ impl<T, const N: usize> Push for staticvec::StaticVec<T, N> {
   type Input = T;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }
@@ -110,6 +115,7 @@ where
   type Input = A::Item;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }
@@ -129,6 +135,7 @@ where
   type Input = A::Item;
   type Output = ();
 
+  #[inline]
   fn push(&mut self, input: Self::Input) {
     self.push(input)
   }

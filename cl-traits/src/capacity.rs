@@ -18,6 +18,7 @@ pub trait Capacity {
 impl<T> Capacity for Option<T> {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     1
   }
@@ -33,6 +34,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     A::CAPACITY
   }
@@ -45,6 +47,7 @@ where
 impl<'a, T> Capacity for &'a [T] {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.len()
   }
@@ -56,6 +59,7 @@ impl<'a, T> Capacity for &'a [T] {
 impl<'a, T> Capacity for &'a mut [T] {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.len()
   }
@@ -69,6 +73,7 @@ impl<'a, T> Capacity for &'a mut [T] {
 impl<T> Capacity for Vec<T> {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }
@@ -85,6 +90,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }
@@ -101,6 +107,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }
@@ -114,6 +121,7 @@ where
 impl<T, const N: usize> Capacity for staticvec::StaticVec<T, N> {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }
@@ -131,6 +139,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }
@@ -148,6 +157,7 @@ where
 {
   type Output = usize;
 
+  #[inline]
   fn capacity(&self) -> Self::Output {
     self.capacity()
   }

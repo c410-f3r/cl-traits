@@ -22,6 +22,7 @@ impl<T> Remove for Vec<T> {
   type Input = usize;
   type Output = T;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }
@@ -40,6 +41,7 @@ where
   type Input = usize;
   type Output = A::Item;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }
@@ -58,6 +60,7 @@ where
   type Input = usize;
   type Output = A::Item;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }
@@ -73,6 +76,7 @@ impl<T, const N: usize> Remove for staticvec::StaticVec<T, N> {
   type Input = usize;
   type Output = T;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }
@@ -92,6 +96,7 @@ where
   type Input = usize;
   type Output = A::Item;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }
@@ -111,6 +116,7 @@ where
   type Input = usize;
   type Output = A::Item;
 
+  #[inline]
   fn remove(&mut self, input: Self::Input) -> Self::Output {
     self.remove(input)
   }

@@ -21,6 +21,7 @@ impl<T> Insert for Option<T> {
   type Input = T;
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     *self = Some(input);
   }
@@ -36,6 +37,7 @@ impl<T> Insert for Vec<T> {
   type Input = (usize, T);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
@@ -54,6 +56,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
@@ -72,6 +75,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
@@ -87,6 +91,7 @@ impl<T, const N: usize> Insert for staticvec::StaticVec<T, N> {
   type Input = (usize, T);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
@@ -106,6 +111,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
@@ -125,6 +131,7 @@ where
   type Input = (usize, A::Item);
   type Output = ();
 
+  #[inline]
   fn insert(&mut self, input: Self::Input) {
     self.insert(input.0, input.1)
   }
