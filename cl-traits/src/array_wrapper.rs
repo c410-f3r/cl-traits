@@ -96,7 +96,7 @@ where
           if let Some(value) = seq.next_element()? {
             Ok(value)
           } else {
-            return Err(SA::Error::invalid_length(idx, &self));
+            Err(SA::Error::invalid_length(idx, &self))
           }
         })?;
         Ok(ArrayWrapper { array })
