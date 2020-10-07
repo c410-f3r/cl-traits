@@ -1,6 +1,5 @@
 [workspace]
 members = [
     "cl-traits",
-    "cl-traits-derive",
     "cl-traits-examples",
 ]

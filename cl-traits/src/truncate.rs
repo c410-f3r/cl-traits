@@ -1,4 +1,4 @@
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`Truncate`](Truncate::truncate) for more information.
@@ -123,7 +123,7 @@ where
 /// cl_traits::Truncate::truncate(&mut structure, 1);
 /// assert_eq!(structure.len(), 1);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Truncate for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,

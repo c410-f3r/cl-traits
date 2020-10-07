@@ -1,34 +1,95 @@
-use crate::Array;
-use core::{mem::MaybeUninit, ptr};
+use core::{
+  mem::{self, MaybeUninit},
+  ptr,
+};
+
+struct ArrayGuard<T, const N: usize> {
+  dst: *mut T,
+  initialized: usize,
+}
+
+impl<T, const N: usize> Drop for ArrayGuard<T, N> {
+  fn drop(&mut self) {
+    let initialized_part = ptr::slice_from_raw_parts_mut(self.dst, self.initialized);
+    unsafe {
+      ptr::drop_in_place(initialized_part);
+    }
+  }
+}
 
 /// Creates an array `[T; N]` where each array element `T` is returned by the `cb` call.
-#[inline]
-pub fn create_array<A, F>(mut cb: F) -> A
+///
+/// * Example
+///
+/// ```rust
+/// use cl_traits::create_array;
+/// let array: [usize; 4] = create_array(|idx| idx);
+/// assert_eq!(array, [0, 1, 2, 3]);
+/// ```
+#[allow(clippy::as_conversions, clippy::mem_forget)]
+pub fn create_array<F, T, const N: usize>(mut cb: F) -> [T; N]
 where
-  A: Array,
-  F: FnMut(usize) -> A::Item,
+  F: FnMut(usize) -> T,
 {
-  let mut array: MaybeUninit<A> = MaybeUninit::uninit();
+  let mut array: MaybeUninit<[T; N]> = MaybeUninit::uninit();
+  let mut guard: ArrayGuard<T, N> = ArrayGuard { dst: array.as_mut_ptr() as _, initialized: 0 };
   unsafe {
-    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
+    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
       ptr::write(value_ptr, cb(idx));
+      guard.initialized = guard.initialized.saturating_add(1);
     }
+    mem::forget(guard);
     array.assume_init()
   }
 }
 
-/// Creates an falible array `[T; N]` where each array element `T` is returned by the `cb` call.
-#[inline]
-pub fn create_array_rslt<A, E, F>(mut cb: F) -> Result<A, E>
+/// Creates an array `[T; N]` where each array element is `T::default()`
+///
+/// * Example
+///
+/// ```rust
+/// use cl_traits::default_array;
+/// let array: [usize; 4] = default_array();
+/// assert_eq!(array, [0, 0, 0, 0]);
+/// ```
+pub fn default_array<T, const N: usize>() -> [T; N]
 where
-  A: Array,
-  F: FnMut(usize) -> Result<A::Item, E>,
+  T: Default,
 {
-  let mut array: MaybeUninit<A> = MaybeUninit::uninit();
+  create_array(|_| T::default())
+}
+
+/// Creates a fallible array `[T; N]` where each array element `T` is returned by the `cb` call.
+///
+/// * Example
+///
+/// ```rust
+/// use cl_traits::try_create_array;
+///
+/// #[derive(Debug, PartialEq)]
+/// enum SomeError {
+///   Foo
+/// }
+///
+/// let array: Result<[usize; 5], SomeError> = try_create_array(|i| Ok(i));
+/// assert_eq!(array, Ok([0, 1, 2, 3, 4]));
+///
+/// let another_array: Result<[usize; 5], SomeError> = try_create_array(|_| Err(SomeError::Foo));
+/// assert_eq!(another_array, Err(SomeError::Foo));
+/// ```
+#[allow(clippy::as_conversions, clippy::mem_forget)]
+pub fn try_create_array<E, F, T, const N: usize>(mut cb: F) -> Result<[T; N], E>
+where
+  F: FnMut(usize) -> Result<T, E>,
+{
+  let mut array: MaybeUninit<[T; N]> = MaybeUninit::uninit();
+  let mut guard: ArrayGuard<T, N> = ArrayGuard { dst: array.as_mut_ptr() as _, initialized: 0 };
   unsafe {
-    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).slice_mut().iter_mut().enumerate() {
-      ptr::write(value_ptr, cb(idx)?);
+    for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
+      core::ptr::write(value_ptr, cb(idx)?);
+      guard.initialized = guard.initialized.saturating_add(1);
     }
+    mem::forget(guard);
     Ok(array.assume_init())
   }
 }

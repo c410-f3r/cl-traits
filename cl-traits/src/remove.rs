@@ -1,15 +1,27 @@
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
+
+#[allow(unused)]
+macro_rules! vec_remove {
+  ($v:expr, $idx:expr) => {{
+    if $idx >= $v.len() {
+      return Err(());
+    }
+    Ok($v.remove($idx))
+  }};
+}
 
 /// See [`remove`](Remove::remove) for more information.
 pub trait Remove {
+  /// Error
+  type Error;
   /// Input
   type Input;
-  /// Output
-  type Output;
+  /// Ok
+  type Ok;
 
   /// Removes an element referenced by `Input`.
-  fn remove(&mut self, input: Self::Input) -> Self::Output;
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error>;
 }
 
 /// ```rust
@@ -19,12 +31,13 @@ pub trait Remove {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Remove for Vec<T> {
+  type Error = ();
   type Input = usize;
-  type Output = T;
+  type Ok = T;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }
 
@@ -38,12 +51,13 @@ impl<A> Remove for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
+  type Error = ();
   type Input = usize;
-  type Output = A::Item;
+  type Ok = A::Item;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }
 
@@ -57,12 +71,13 @@ impl<A> Remove for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
+  type Error = ();
   type Input = usize;
-  type Output = A::Item;
+  type Ok = A::Item;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }
 
@@ -73,12 +88,13 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Remove for staticvec::StaticVec<T, N> {
+  type Error = ();
   type Input = usize;
-  type Output = T;
+  type Ok = T;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }
 
@@ -93,12 +109,13 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
+  type Error = ();
   type Input = usize;
-  type Output = A::Item;
+  type Ok = A::Item;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }
 
@@ -107,17 +124,18 @@ where
 /// cl_traits::Remove::remove(&mut structure, 0);
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Remove for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,
   A::Item: Default,
 {
+  type Error = ();
   type Input = usize;
-  type Output = A::Item;
+  type Ok = A::Item;
 
   #[inline]
-  fn remove(&mut self, input: Self::Input) -> Self::Output {
-    self.remove(input)
+  fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
+    vec_remove!(self, idx)
   }
 }

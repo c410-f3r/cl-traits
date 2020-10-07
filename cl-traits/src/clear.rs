@@ -1,4 +1,4 @@
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`clear`](Clear::clear) for more information.
@@ -114,7 +114,7 @@ where
 /// cl_traits::Clear::clear(&mut structure);
 /// assert_eq!(structure.len(), 0);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Clear for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,

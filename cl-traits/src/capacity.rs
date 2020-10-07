@@ -1,5 +1,4 @@
-use crate::{Array, ArrayWrapper};
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`capacity`](Capacity::capacity) for more information.
@@ -25,18 +24,15 @@ impl<T> Capacity for Option<T> {
 }
 
 /// ```rust
-/// let mut structure = cl_traits::doc_tests::array_wrapper();
+/// let mut structure = cl_traits::doc_tests::array();
 /// assert_eq!(cl_traits::Capacity::capacity(&structure), 3);
 /// ```
-impl<A> Capacity for ArrayWrapper<A>
-where
-  A: Array,
-{
+impl<T, const N: usize> Capacity for [T; N] {
   type Output = usize;
 
   #[inline]
   fn capacity(&self) -> Self::Output {
-    A::CAPACITY
+    N
   }
 }
 
@@ -149,7 +145,7 @@ where
 /// let mut structure = cl_traits::doc_tests::tiny_vec();
 /// assert_eq!(cl_traits::Capacity::capacity(&structure), 5);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Capacity for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,

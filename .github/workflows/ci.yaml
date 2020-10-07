@@ -7,20 +7,6 @@ on:
       - master
 
 jobs:
-  cargo-audit:
-    name: Cargo audit
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - uses: actions-rs/install@v0.1
-      with:
-        crate: cargo-audit
-        use-tool-cache: true
-
-    - run: cargo audit
-
   everything:
     name: Everything
     runs-on: ubuntu-latest
@@ -31,42 +17,27 @@ jobs:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly-2020-03-06
-          profile: minimal
-          override: true
           components: clippy, rustfmt
+          override: true
+          profile: minimal
+          toolchain: nightly-2020-10-02
 
-      - run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
-
-      - name: Cache cargo registry
-        uses: actions/cache@v1
+      - name: Cache cargo directories
+        uses: actions/cache@v2
         with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Cache cargo index
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Cache cargo target dir
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-features -- -D warnings
-
-      - name: Rustfmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
       - name: Test
-        run: ./scripts/test.sh && ./scripts/test-nightly.sh
+        run: ./scripts/tests.sh
+
+      - name: Tools
+        run: ./scripts/tools.sh

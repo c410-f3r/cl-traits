@@ -1,5 +1,4 @@
-use crate::ArrayWrapper;
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`with_capacity`](WithCapacity::with_capacity) for more information.
@@ -13,20 +12,19 @@ pub trait WithCapacity {
 
 /// ```rust
 /// use cl_traits::Capacity;
-/// let structure: cl_traits::ArrayWrapper<[i32; 5]>;
+/// let structure: [i32; 5];
 /// structure = cl_traits::WithCapacity::with_capacity(Default::default());
 /// assert_eq!(structure.capacity(), 5);
 /// ```
-impl<A> WithCapacity for ArrayWrapper<A>
+impl<T, const N: usize> WithCapacity for [T; N]
 where
-  A: crate::Array,
-  A::Item: Default,
+  T: Default,
 {
   type Input = usize;
 
   #[inline]
   fn with_capacity(_: Self::Input) -> Self {
-    ArrayWrapper::default()
+    crate::create_array(|_| T::default())
   }
 }
 
@@ -58,7 +56,7 @@ impl<T> WithCapacity for Vec<T> {
 }
 
 /// ```rust
-/// let structure: arrayvec::ArrayVec<cl_traits::ArrayWrapper<[i32; 5]>>;
+/// let structure: arrayvec::ArrayVec<[i32; 5]>;
 /// structure = cl_traits::WithCapacity::with_capacity(Default::default());
 /// assert_eq!(structure.capacity(), 5);
 /// ```
@@ -76,7 +74,7 @@ where
 }
 
 /// ```rust
-/// let structure: smallvec::SmallVec<cl_traits::ArrayWrapper<[i32; 5]>>;
+/// let structure: smallvec::SmallVec<[i32; 5]>;
 /// structure = cl_traits::WithCapacity::with_capacity(Default::default());
 /// assert_eq!(structure.capacity(), 5);
 /// ```
@@ -132,7 +130,7 @@ where
 /// structure = cl_traits::WithCapacity::with_capacity(Default::default());
 /// assert_eq!(structure.capacity(), 5);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> WithCapacity for tinyvec::TinyVec<A>
 where
   A: Default + tinyvec::Array,

@@ -4,21 +4,17 @@
 //! a single `trait` that fits all. This crate tries to circumvent such behaviour by providing
 //! a single method for each `trait` to achieve maximum flexibility and freedom.
 
-#![cfg_attr(feature = "const-generics", allow(incomplete_features))]
-#![cfg_attr(feature = "const-generics", feature(const_generics))]
 #![cfg_attr(not(feature = "std"), no_std)]
+#![feature(min_const_generics)]
 
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 extern crate alloc;
 
-mod array;
-mod array_wrapper;
 mod capacity;
 mod clear;
 pub mod doc_tests;
 mod insert;
 mod length;
-mod macros;
 mod push;
 mod remove;
 mod retain;
@@ -28,11 +24,7 @@ mod truncate;
 mod utils;
 mod with_capacity;
 
-pub use array::*;
-pub use array_wrapper::*;
 pub use capacity::*;
-#[cfg(feature = "with-cl-traits-derive")]
-pub use cl_traits_derive::*;
 pub use clear::*;
 pub use insert::*;
 pub use length::*;

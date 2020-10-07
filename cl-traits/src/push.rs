@@ -1,15 +1,17 @@
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`push`](Push::push) for more information.
 pub trait Push {
+  /// Error
+  type Error;
   /// Input
   type Input;
   /// Output
-  type Output;
+  type Ok;
 
   /// Pushes an element, increasing the storage length.
-  fn push(&mut self, input: Self::Input) -> Self::Output;
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error>;
 }
 
 /// ```rust
@@ -18,15 +20,17 @@ pub trait Push {
 /// assert_eq!(opt, Some(3));
 /// ```
 impl<T> Push for Option<T> {
+  type Error = T;
   type Input = T;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
     if self.is_some() {
-      panic!("Exceeded capacity for Option");
+      Err(input)
     } else {
       *self = Some(input);
+      Ok(())
     }
   }
 }
@@ -38,12 +42,14 @@ impl<T> Push for Option<T> {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Push for Vec<T> {
+  type Error = core::convert::Infallible;
   type Input = T;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    self.push(input);
+    Ok(())
   }
 }
 
@@ -57,12 +63,13 @@ impl<A> Push for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
+  type Error = A::Item;
   type Input = A::Item;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    self.try_push(input).map_err(|e| e.element())
   }
 }
 
@@ -76,12 +83,14 @@ impl<A> Push for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
+  type Error = A::Item;
   type Input = A::Item;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    self.push(input);
+    Ok(())
   }
 }
 
@@ -92,12 +101,13 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Push for staticvec::StaticVec<T, N> {
+  type Error = T;
   type Input = T;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    self.try_push(input).map_err(|e| e.into_value())
   }
 }
 
@@ -112,12 +122,16 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
+  type Error = A::Item;
   type Input = A::Item;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    match self.try_push(input) {
+      None => Ok(()),
+      Some(rslt) => Err(rslt),
+    }
   }
 }
 
@@ -126,17 +140,19 @@ where
 /// cl_traits::Push::push(&mut structure, 20);
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Push for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,
   A::Item: Default,
 {
+  type Error = A::Item;
   type Input = A::Item;
-  type Output = ();
+  type Ok = ();
 
   #[inline]
-  fn push(&mut self, input: Self::Input) {
-    self.push(input)
+  fn push(&mut self, input: Self::Input) -> Result<Self::Ok, Self::Error> {
+    self.push(input);
+    Ok(())
   }
 }

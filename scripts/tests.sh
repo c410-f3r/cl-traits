@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 
-set -eux
-
-export RUSTFLAGS='
-    -D missing_docs
-    -F rust_2018_idioms
-    -F trivial_casts
-    -F unused_lifetimes
-    -F unused_qualifications
-    -F warnings
-    -F missing_debug_implementations
-'
-export RUST_BACKTRACE=full
+. "$(dirname "$0")/commons.sh" --source-only
 
 run_package_example() {
     local package=$1
@@ -38,3 +27,15 @@ test_package_with_feature() {
     /bin/echo -e "\e[0;33m***** Testing ${package} with feature '${feature}' *****\e[0m\n"
     cargo test --manifest-path "${package}"/Cargo.toml --features "${feature}" --no-default-features
 }
+
+test_package_generic "cl-traits"
+
+test_package_with_feature "cl-traits" "alloc"
+test_package_with_feature "cl-traits" "std"
+test_package_with_feature "cl-traits" "with-arrayvec"
+test_package_with_feature "cl-traits" "with-smallvec"
+test_package_with_feature "cl-traits" "with-staticvec"
+test_package_with_feature "cl-traits" "with-tinyvec"
+
+run_package_example "cl-traits-examples" "manual"
+

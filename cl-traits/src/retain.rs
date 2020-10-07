@@ -1,15 +1,15 @@
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`retain`](Retain::retain) for more information.
 pub trait Retain {
-  /// Function
-  type Fn;
+  /// Input
+  type Input;
   /// Output
   type Output;
 
   /// Retains only the elements specified by the `F` predicate.
-  fn retain(&mut self, input: Self::Fn) -> Self::Output;
+  fn retain(&mut self, input: Self::Input) -> Self::Output;
 }
 
 /// ```rust
@@ -18,12 +18,12 @@ pub trait Retain {
 /// assert_eq!(opt, None);
 /// ```
 impl<T> Retain for Option<T> {
-  type Fn = fn(&T) -> bool;
+  type Input = fn(&T) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
-    if let Some(elem) = self {
+  fn retain(&mut self, input: Self::Input) {
+    if let Some(elem) = self.as_mut() {
       if !input(elem) {
         *self = None;
       }
@@ -38,11 +38,11 @@ impl<T> Retain for Option<T> {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Retain for Vec<T> {
-  type Fn = fn(&T) -> bool;
+  type Input = fn(&T) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(input)
   }
 }
@@ -57,11 +57,11 @@ impl<A> Retain for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
-  type Fn = fn(&A::Item) -> bool;
+  type Input = fn(&A::Item) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(|i| input(i))
   }
 }
@@ -76,11 +76,11 @@ impl<A> Retain for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
-  type Fn = fn(&A::Item) -> bool;
+  type Input = fn(&A::Item) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(|i| input(i))
   }
 }
@@ -92,11 +92,11 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Retain for staticvec::StaticVec<T, N> {
-  type Fn = fn(&T) -> bool;
+  type Input = fn(&T) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(input)
   }
 }
@@ -112,11 +112,11 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Fn = fn(&A::Item) -> bool;
+  type Input = fn(&A::Item) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(input)
   }
 }
@@ -126,17 +126,17 @@ where
 /// cl_traits::Retain::retain(&mut structure, |n| n % 2 == 0);
 /// assert_eq!(&structure[..], &[2]);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Retain for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Fn = fn(&A::Item) -> bool;
+  type Input = fn(&A::Item) -> bool;
   type Output = ();
 
   #[inline]
-  fn retain(&mut self, input: Self::Fn) {
+  fn retain(&mut self, input: Self::Input) {
     self.retain(input)
   }
 }

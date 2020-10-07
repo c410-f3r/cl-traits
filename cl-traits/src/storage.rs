@@ -1,5 +1,4 @@
-use crate::{Array, ArrayWrapper};
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// Storage is anything that can hold a collection of items
@@ -12,11 +11,8 @@ impl<T> Storage for Option<T> {
   type Item = T;
 }
 
-impl<A> Storage for ArrayWrapper<A>
-where
-  A: Array,
-{
-  type Item = A::Item;
+impl<T, const N: usize> Storage for [T; N] {
+  type Item = T;
 }
 
 impl<'a, T> Storage for &'a [T] {
@@ -62,7 +58,7 @@ where
   type Item = A::Item;
 }
 
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Storage for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,

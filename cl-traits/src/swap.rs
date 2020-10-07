@@ -1,6 +1,16 @@
-use crate::{Array, ArrayWrapper};
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
+
+macro_rules! vec_swap {
+  ($v:expr, $a:expr, $b:expr) => {{
+    if $a >= $v.len() || $b >= $v.len() {
+      return Err(());
+    }
+    let slice: &mut [_] = $v.as_mut();
+    slice.swap($a, $b);
+    Ok(())
+  }};
+}
 
 /// See [`Swap`](Swap::swap) for more information.
 pub trait Swap {
@@ -14,21 +24,18 @@ pub trait Swap {
 }
 
 /// ```rust
-/// let mut structure = cl_traits::doc_tests::array_wrapper();
+/// let mut structure = cl_traits::doc_tests::array();
 /// cl_traits::Swap::swap(&mut structure, [0, 2]);
 /// assert_eq!(structure.get(0), Some(&3));
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
-impl<A> Swap for ArrayWrapper<A>
-where
-  A: Array,
-{
+impl<T, const N: usize> Swap for [T; N] {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.array.slice_mut().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -40,11 +47,11 @@ where
 /// ```
 impl<'a, T> Swap for &'a mut [T] {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -57,11 +64,11 @@ impl<'a, T> Swap for &'a mut [T] {
 #[cfg(feature = "alloc")]
 impl<T> Swap for Vec<T> {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -77,11 +84,11 @@ where
   A: arrayvec::Array,
 {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -97,11 +104,11 @@ where
   A: smallvec::Array,
 {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -114,11 +121,11 @@ where
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Swap for staticvec::StaticVec<T, N> {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -135,11 +142,11 @@ where
   A::Item: Default,
 {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }
 
@@ -149,17 +156,17 @@ where
 /// assert_eq!(structure.get(0), Some(&3));
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Swap for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,
   A::Item: Default,
 {
   type Input = [usize; 2];
-  type Output = ();
+  type Output = Result<(), ()>;
 
   #[inline]
-  fn swap(&mut self, [a, b]: Self::Input) {
-    self.as_mut_slice().swap(a, b)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    vec_swap!(self, a, b)
   }
 }

@@ -1,30 +1,30 @@
-//! Manual trait implementations without macros.
+//! Manual trait implementations.
 
 use cl_traits::*;
 
-trait GenericVector<E>:
+trait GenericVector<I>:
   Capacity<Output = usize>
   + Clear<Output = ()>
   + Length<Output = usize>
-  + Push<Input = E, Output = ()>
+  + Push<Input = I, Ok = ()>
   + Swap<Input = [usize; 2], Output = ()>
   + Truncate<Input = usize, Output = ()>
 {
 }
 
-impl<E, T> GenericVector<E> for T where
+impl<I, T> GenericVector<I> for T where
   T: Capacity<Output = usize>
     + Clear<Output = ()>
     + Length<Output = usize>
-    + Push<Input = E, Output = ()>
+    + Push<Input = I, Ok = ()>
     + Swap<Input = [usize; 2], Output = ()>
     + Truncate<Input = usize, Output = ()>
 {
 }
 
-struct SomeCustomVector<E>(Vec<E>);
+struct SomeCustomVector<I>(Vec<I>);
 
-impl<E> Capacity for SomeCustomVector<E> {
+impl<I> Capacity for SomeCustomVector<I> {
   type Output = usize;
 
   fn capacity(&self) -> Self::Output {
@@ -40,7 +40,7 @@ impl<T> Clear for SomeCustomVector<T> {
   }
 }
 
-impl<E> Length for SomeCustomVector<E> {
+impl<I> Length for SomeCustomVector<I> {
   type Output = usize;
 
   fn length(&self) -> Self::Output {
@@ -48,12 +48,14 @@ impl<E> Length for SomeCustomVector<E> {
   }
 }
 
-impl<E> Push for SomeCustomVector<E> {
-  type Input = E;
-  type Output = ();
+impl<I> Push for SomeCustomVector<I> {
+  type Error = core::convert::Infallible;
+  type Input = I;
+  type Ok = ();
 
-  fn push(&mut self, elem: E) -> Self::Output {
+  fn push(&mut self, elem: I) -> Result<Self::Ok, Self::Error> {
     self.0.push(elem);
+    Ok(())
   }
 }
 
@@ -61,8 +63,8 @@ impl<T> Swap for SomeCustomVector<T> {
   type Input = [usize; 2];
   type Output = ();
 
-  fn swap(&mut self, input: Self::Input) -> Self::Output {
-    self.0.swap(input)
+  fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
+    self.0.as_mut_slice().swap(a, b)
   }
 }
 
@@ -75,9 +77,9 @@ impl<T> Truncate for SomeCustomVector<T> {
   }
 }
 
-fn stuff<E, T>(_: &mut T)
+fn stuff<I, T>(_: &mut T)
 where
-  T: GenericVector<E>,
+  T: GenericVector<I>,
 {
 }
 

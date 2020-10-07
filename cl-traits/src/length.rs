@@ -1,5 +1,4 @@
-use crate::{Array, ArrayWrapper};
-#[cfg(all(feature = "alloc", not(feature = "std")))]
+#[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
 /// See [`length`](Length::length) for more information.
@@ -56,18 +55,15 @@ impl<'a, T> Length for &'a mut [T] {
 }
 
 /// ```rust
-/// let structure = cl_traits::doc_tests::array_wrapper();
+/// let structure = cl_traits::doc_tests::array();
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
-impl<A> Length for ArrayWrapper<A>
-where
-  A: Array,
-{
+impl<T, const N: usize> Length for [T; N] {
   type Output = usize;
 
   #[inline]
   fn length(&self) -> Self::Output {
-    self.array.slice().len()
+    self.len()
   }
 }
 
@@ -155,7 +151,7 @@ where
 /// let structure = cl_traits::doc_tests::tiny_vec();
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
-#[cfg(all(feature = "alloc", feature = "with-tinyvec"))]
+#[cfg(feature = "with-tinyvec")]
 impl<A> Length for tinyvec::TinyVec<A>
 where
   A: tinyvec::Array,
