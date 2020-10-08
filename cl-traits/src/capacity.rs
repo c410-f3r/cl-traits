@@ -6,8 +6,8 @@ pub trait Capacity {
   /// Output
   type Output;
 
-  /// The number of elements that the implementation is able to store, not necessary equal
-  /// to its length.
+  /// The number of elements the implementation has pre-allocated as an internal buffer. Not
+  /// necessarily the current number of inserted elements.
   fn capacity(&self) -> Self::Output;
 }
 

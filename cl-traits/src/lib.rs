@@ -11,6 +11,7 @@
 extern crate alloc;
 
 mod capacity;
+mod capacity_upper_bound;
 mod clear;
 pub mod doc_tests;
 mod insert;
@@ -25,6 +26,7 @@ mod utils;
 mod with_capacity;
 
 pub use capacity::*;
+pub use capacity_upper_bound::*;
 pub use clear::*;
 pub use insert::*;
 pub use length::*;
