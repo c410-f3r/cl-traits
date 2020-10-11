@@ -7,8 +7,8 @@ on:
       - master
 
 jobs:
-  everything:
-    name: Everything
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,5 +36,5 @@ jobs:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Test
+      - name: Tests
         run: ./scripts/tests.sh
