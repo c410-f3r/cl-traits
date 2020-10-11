@@ -3,11 +3,8 @@ use alloc::vec::Vec;
 
 /// See [`length`](Length::length) for more information.
 pub trait Length {
-  /// Output
-  type Output;
-
   /// Holds a certain number of elements.
-  fn length(&self) -> Self::Output;
+  fn length(&self) -> usize;
 }
 
 /// ```rust
@@ -17,10 +14,8 @@ pub trait Length {
 /// assert_eq!(cl_traits::Length::length(&opt), 0);
 /// ```
 impl<T> Length for Option<T> {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     if self.is_some() {
       1
     } else {
@@ -34,10 +29,8 @@ impl<T> Length for Option<T> {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 impl<'a, T> Length for &'a [T] {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -46,10 +39,8 @@ impl<'a, T> Length for &'a [T] {
 /// assert_eq!(cl_traits::Length::length(&&mut [1, 2, 3][..]), 3);
 /// ```
 impl<'a, T> Length for &'a mut [T] {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -59,10 +50,8 @@ impl<'a, T> Length for &'a mut [T] {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 impl<T, const N: usize> Length for [T; N] {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -73,10 +62,8 @@ impl<T, const N: usize> Length for [T; N] {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Length for Vec<T> {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -90,10 +77,8 @@ impl<A> Length for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -107,10 +92,8 @@ impl<A> Length for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -121,10 +104,8 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Length for staticvec::StaticVec<T, N> {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -139,10 +120,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }
@@ -157,10 +136,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn length(&self) -> Self::Output {
+  fn length(&self) -> usize {
     self.len()
   }
 }

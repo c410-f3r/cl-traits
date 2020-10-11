@@ -3,22 +3,17 @@ use alloc::vec::Vec;
 
 /// See [`capacity`](Capacity::capacity) for more information.
 pub trait Capacity {
-  /// Output
-  type Output;
-
   /// The number of elements the implementation has pre-allocated as an internal buffer. Not
   /// necessarily the current number of inserted elements.
-  fn capacity(&self) -> Self::Output;
+  fn capacity(&self) -> usize;
 }
 
 /// ```rust
 /// assert_eq!(cl_traits::Capacity::capacity(&Some(0)), 1);
 /// ```
 impl<T> Capacity for Option<T> {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     1
   }
 }
@@ -28,10 +23,8 @@ impl<T> Capacity for Option<T> {
 /// assert_eq!(cl_traits::Capacity::capacity(&structure), 3);
 /// ```
 impl<T, const N: usize> Capacity for [T; N] {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     N
   }
 }
@@ -41,10 +34,8 @@ impl<T, const N: usize> Capacity for [T; N] {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 impl<'a, T> Capacity for &'a [T] {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.len()
   }
 }
@@ -53,10 +44,8 @@ impl<'a, T> Capacity for &'a [T] {
 /// assert_eq!(cl_traits::Length::length(&&mut [1, 2, 3][..]), 3);
 /// ```
 impl<'a, T> Capacity for &'a mut [T] {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.len()
   }
 }
@@ -67,10 +56,8 @@ impl<'a, T> Capacity for &'a mut [T] {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Capacity for Vec<T> {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }
@@ -84,10 +71,8 @@ impl<A> Capacity for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }
@@ -101,10 +86,8 @@ impl<A> Capacity for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }
@@ -115,10 +98,8 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Capacity for staticvec::StaticVec<T, N> {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }
@@ -133,10 +114,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }
@@ -151,10 +130,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity(&self) -> Self::Output {
+  fn capacity(&self) -> usize {
     self.capacity()
   }
 }

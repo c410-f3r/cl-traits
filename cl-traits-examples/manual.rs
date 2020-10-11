@@ -3,9 +3,9 @@
 use cl_traits::*;
 
 trait GenericVector<I>:
-  Capacity<Output = usize>
-  + Clear<Output = ()>
-  + Length<Output = usize>
+  Capacity
+  + Clear
+  + Length
   + Push<Input = I, Ok = ()>
   + Swap<Input = [usize; 2], Output = ()>
   + Truncate<Input = usize, Output = ()>
@@ -13,9 +13,9 @@ trait GenericVector<I>:
 }
 
 impl<I, T> GenericVector<I> for T where
-  T: Capacity<Output = usize>
-    + Clear<Output = ()>
-    + Length<Output = usize>
+  T: Capacity
+    + Clear
+    + Length
     + Push<Input = I, Ok = ()>
     + Swap<Input = [usize; 2], Output = ()>
     + Truncate<Input = usize, Output = ()>
@@ -25,25 +25,22 @@ impl<I, T> GenericVector<I> for T where
 struct SomeCustomVector<I>(Vec<I>);
 
 impl<I> Capacity for SomeCustomVector<I> {
-  type Output = usize;
-
-  fn capacity(&self) -> Self::Output {
+  #[inline]
+  fn capacity(&self) -> usize {
     self.0.capacity()
   }
 }
 
 impl<T> Clear for SomeCustomVector<T> {
-  type Output = ();
-
-  fn clear(&mut self) -> Self::Output {
+  #[inline]
+  fn clear(&mut self) {
     self.0.clear()
   }
 }
 
 impl<I> Length for SomeCustomVector<I> {
-  type Output = usize;
-
-  fn length(&self) -> Self::Output {
+  #[inline]
+  fn length(&self) -> usize {
     self.0.length()
   }
 }
@@ -53,6 +50,7 @@ impl<I> Push for SomeCustomVector<I> {
   type Input = I;
   type Ok = ();
 
+  #[inline]
   fn push(&mut self, elem: I) -> Result<Self::Ok, Self::Error> {
     self.0.push(elem);
     Ok(())
@@ -63,6 +61,7 @@ impl<T> Swap for SomeCustomVector<T> {
   type Input = [usize; 2];
   type Output = ();
 
+  #[inline]
   fn swap(&mut self, [a, b]: Self::Input) -> Self::Output {
     self.0.as_mut_slice().swap(a, b)
   }
@@ -72,6 +71,7 @@ impl<T> Truncate for SomeCustomVector<T> {
   type Input = usize;
   type Output = ();
 
+  #[inline]
   fn truncate(&mut self, input: Self::Input) -> Self::Output {
     self.0.truncate(input)
   }

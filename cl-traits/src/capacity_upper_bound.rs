@@ -4,21 +4,16 @@ use core::mem;
 
 /// See [`capacity_upper_bound`](CapacityUpperBound::capacity_upper_bound) for more information.
 pub trait CapacityUpperBound {
-  /// Output
-  type Output;
-
   /// The maximum theoretical number of elements the implementation is able to store.
-  fn capacity_upper_bound(&self) -> Self::Output;
+  fn capacity_upper_bound(&self) -> usize;
 }
 
 /// ```rust
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&Some(0)), 1);
 /// ```
 impl<T> CapacityUpperBound for Option<T> {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     1
   }
 }
@@ -28,10 +23,8 @@ impl<T> CapacityUpperBound for Option<T> {
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&structure), 3);
 /// ```
 impl<T, const N: usize> CapacityUpperBound for [T; N] {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     N
   }
 }
@@ -41,10 +34,8 @@ impl<T, const N: usize> CapacityUpperBound for [T; N] {
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&structure), 3);
 /// ```
 impl<'a, T> CapacityUpperBound for &'a [T] {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     self.len()
   }
 }
@@ -53,10 +44,8 @@ impl<'a, T> CapacityUpperBound for &'a [T] {
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&&mut [1, 2, 3][..]), 3);
 /// ```
 impl<'a, T> CapacityUpperBound for &'a mut [T] {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     self.len()
   }
 }
@@ -67,10 +56,8 @@ impl<'a, T> CapacityUpperBound for &'a mut [T] {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> CapacityUpperBound for Vec<T> {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     capacity_upper_bound_for_heap::<T>()
   }
 }
@@ -84,10 +71,8 @@ impl<A> CapacityUpperBound for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     A::CAPACITY
   }
 }
@@ -101,10 +86,8 @@ impl<A> CapacityUpperBound for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     capacity_upper_bound_for_heap::<A::Item>()
   }
 }
@@ -115,10 +98,8 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> CapacityUpperBound for staticvec::StaticVec<T, N> {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     N
   }
 }
@@ -133,10 +114,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     A::CAPACITY
   }
 }
@@ -151,10 +130,8 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = usize;
-
   #[inline]
-  fn capacity_upper_bound(&self) -> Self::Output {
+  fn capacity_upper_bound(&self) -> usize {
     capacity_upper_bound_for_heap::<A::Item>()
   }
 }

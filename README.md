@@ -18,9 +18,8 @@ use cl_traits::*;
 struct SomeCustomVector(Vec<i32>, Vec<i32>);
 
 impl Length for SomeCustomVector {
-  type Output = usize;
-
-  fn length(&self) -> Self::Output {
+  #[inline]
+  fn length(&self) -> usize {
     self.0.length() + self.1.length()
   }
 }

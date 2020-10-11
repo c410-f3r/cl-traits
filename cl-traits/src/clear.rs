@@ -3,11 +3,8 @@ use alloc::vec::Vec;
 
 /// See [`clear`](Clear::clear) for more information.
 pub trait Clear {
-  /// Output
-  type Output;
-
-  /// Clears the internal buffer, erasing all elements.
-  fn clear(&mut self) -> Self::Output;
+  /// "Clears" the internal buffer, "erasing" all elements.
+  fn clear(&mut self);
 }
 
 /// ```rust
@@ -16,11 +13,9 @@ pub trait Clear {
 /// assert_eq!(opt, None);
 /// ```
 impl<T> Clear for Option<T> {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
-    self.take();
+    let _ = self.take();
   }
 }
 
@@ -31,8 +26,6 @@ impl<T> Clear for Option<T> {
 /// ```
 #[cfg(feature = "alloc")]
 impl<T> Clear for Vec<T> {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
@@ -49,8 +42,6 @@ impl<A> Clear for arrayvec::ArrayVec<A>
 where
   A: arrayvec::Array,
 {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
@@ -67,8 +58,6 @@ impl<A> Clear for smallvec::SmallVec<A>
 where
   A: smallvec::Array,
 {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
@@ -82,8 +71,6 @@ where
 /// ```
 #[cfg(feature = "with-staticvec")]
 impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
@@ -101,8 +88,6 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
@@ -120,8 +105,6 @@ where
   A: tinyvec::Array,
   A::Item: Default,
 {
-  type Output = ();
-
   #[inline]
   fn clear(&mut self) {
     self.clear()
