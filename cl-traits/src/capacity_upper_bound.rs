@@ -136,7 +136,12 @@ where
   }
 }
 
-#[allow(clippy::as_conversions, unused)]
+#[allow(
+  // isize::MAX is smaller than usize::MAX
+  clippy::as_conversions,
+  // For convenience because of selected features
+  unused
+)]
 #[inline]
 fn capacity_upper_bound_for_heap<T>() -> usize {
   let size_of_t = mem::size_of::<T>();

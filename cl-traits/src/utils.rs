@@ -26,7 +26,12 @@ impl<T, const N: usize> Drop for ArrayGuard<T, N> {
 /// let array: [usize; 4] = create_array(|idx| idx);
 /// assert_eq!(array, [0, 1, 2, 3]);
 /// ```
-#[allow(clippy::as_conversions, clippy::mem_forget)]
+#[allow(
+  // First array pointer
+  clippy::as_conversions,
+  // Should only drop the array when `cb` panics
+  clippy::mem_forget
+)]
 pub fn create_array<F, T, const N: usize>(mut cb: F) -> [T; N]
 where
   F: FnMut(usize) -> T,
@@ -77,7 +82,12 @@ where
 /// let another_array: Result<[usize; 5], SomeError> = try_create_array(|_| Err(SomeError::Foo));
 /// assert_eq!(another_array, Err(SomeError::Foo));
 /// ```
-#[allow(clippy::as_conversions, clippy::mem_forget)]
+#[allow(
+  // First array pointer
+  clippy::as_conversions,
+  // Should only drop the array when `cb` panics
+  clippy::mem_forget
+)]
 pub fn try_create_array<E, F, T, const N: usize>(mut cb: F) -> Result<[T; N], E>
 where
   F: FnMut(usize) -> Result<T, E>,

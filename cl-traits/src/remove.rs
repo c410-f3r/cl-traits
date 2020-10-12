@@ -1,8 +1,12 @@
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
 
-#[allow(unused)]
-macro_rules! vec_remove {
+#[allow(
+  // For convenience because of selected features
+  unused
+)]
+// Manages vectors that don't perform bound checks
+macro_rules! manage_vec {
   ($v:expr, $idx:expr) => {{
     if $idx >= $v.len() {
       return Err(());
@@ -37,7 +41,7 @@ impl<T> Remove for Vec<T> {
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }
 
@@ -57,7 +61,7 @@ where
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }
 
@@ -77,7 +81,7 @@ where
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }
 
@@ -94,7 +98,7 @@ impl<T, const N: usize> Remove for staticvec::StaticVec<T, N> {
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }
 
@@ -115,7 +119,7 @@ where
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }
 
@@ -136,6 +140,6 @@ where
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_remove!(self, idx)
+    manage_vec!(self, idx)
   }
 }

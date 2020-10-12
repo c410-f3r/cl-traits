@@ -6,8 +6,12 @@ use alloc::{
 #[cfg(feature = "std")]
 use std::collections::{HashMap, HashSet};
 
-#[allow(unused)]
-macro_rules! vec_insert {
+#[allow(
+  // For convenience because of selected features
+  unused
+)]
+// Manages vectors that don't perform bound checks
+macro_rules! manage_vec {
   ($v:expr, $idx:expr, $elem:expr) => {{
     if $idx > $v.len() {
       return Err($elem);
@@ -153,7 +157,7 @@ impl<T> Insert for Vec<T> {
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
 
@@ -173,7 +177,7 @@ where
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
 
@@ -193,7 +197,7 @@ where
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
 
@@ -210,7 +214,7 @@ impl<T, const N: usize> Insert for staticvec::StaticVec<T, N> {
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
 
@@ -231,7 +235,7 @@ where
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
 
@@ -252,6 +256,6 @@ where
 
   #[inline]
   fn insert(&mut self, (idx, elem): Self::Input) -> Result<Self::Ok, Self::Error> {
-    vec_insert!(self, idx, elem)
+    manage_vec!(self, idx, elem)
   }
 }
