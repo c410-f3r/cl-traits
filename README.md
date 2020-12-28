@@ -4,7 +4,7 @@
 [![crates.io](https://img.shields.io/crates/v/cl-traits.svg)](https://crates.io/crates/cl-traits)
 [![Documentation](https://docs.rs/cl-traits/badge.svg)](https://docs.rs/cl-traits)
 [![License](https://img.shields.io/badge/license-APACHE2-blue.svg)](./LICENSE)
-[![Rustc](https://img.shields.io/badge/rustc-1.42-lightgray")](https://blog.rust-lang.org/2020/03/12/Rust-1.42.html)
+![Rustc](https://img.shields.io/badge/rustc-1.52-lightgray)
 
 Yet another library that generalizes collections. This is a best effort without GAT.
 
@@ -30,4 +30,4 @@ fn main() {
 }
 ```
 
-You can see more complete examples in the `examples` directory.
+You can see more complete examples in the `cl-traits-examples` directory.

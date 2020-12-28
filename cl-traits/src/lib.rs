@@ -5,7 +5,6 @@
 //! a single method for each `trait` to achieve maximum flexibility and freedom.
 
 #![cfg_attr(not(feature = "std"), no_std)]
-#![feature(min_const_generics)]
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
