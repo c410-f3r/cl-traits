@@ -9,6 +9,7 @@ struct ArrayGuard<T, const N: usize> {
 }
 
 impl<T, const N: usize> Drop for ArrayGuard<T, N> {
+  #[inline]
   fn drop(&mut self) {
     let initialized_part = ptr::slice_from_raw_parts_mut(self.dst, self.initialized);
     unsafe {
@@ -32,6 +33,7 @@ impl<T, const N: usize> Drop for ArrayGuard<T, N> {
   // Should only drop the array when `cb` panics
   clippy::mem_forget
 )]
+#[inline]
 pub fn create_array<F, T, const N: usize>(mut cb: F) -> [T; N]
 where
   F: FnMut(usize) -> T,
@@ -57,6 +59,7 @@ where
 /// let array: [usize; 4] = default_array();
 /// assert_eq!(array, [0, 0, 0, 0]);
 /// ```
+#[inline]
 pub fn default_array<T, const N: usize>() -> [T; N]
 where
   T: Default,
@@ -88,6 +91,7 @@ where
   // Should only drop the array when `cb` panics
   clippy::mem_forget
 )]
+#[inline]
 pub fn try_create_array<E, F, T, const N: usize>(mut cb: F) -> Result<[T; N], E>
 where
   F: FnMut(usize) -> Result<T, E>,
