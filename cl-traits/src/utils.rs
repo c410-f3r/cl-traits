@@ -12,6 +12,10 @@ impl<T, const N: usize> Drop for ArrayGuard<T, N> {
   #[inline]
   fn drop(&mut self) {
     let initialized_part = ptr::slice_from_raw_parts_mut(self.dst, self.initialized);
+    #[allow(
+      // Waiting for std method to remove `ArrayGuard`
+      unsafe_code
+    )]
     unsafe {
       ptr::drop_in_place(initialized_part);
     }
@@ -40,6 +44,10 @@ where
 {
   let mut array: MaybeUninit<[T; N]> = MaybeUninit::uninit();
   let mut guard: ArrayGuard<T, N> = ArrayGuard { dst: array.as_mut_ptr() as _, initialized: 0 };
+  #[allow(
+    // Waiting for std method to remove `ArrayGuard`
+    unsafe_code
+  )]
   unsafe {
     for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
       ptr::write(value_ptr, cb(idx));
@@ -98,6 +106,10 @@ where
 {
   let mut array: MaybeUninit<[T; N]> = MaybeUninit::uninit();
   let mut guard: ArrayGuard<T, N> = ArrayGuard { dst: array.as_mut_ptr() as _, initialized: 0 };
+  #[allow(
+    // Waiting for std method to remove `ArrayGuard`
+    unsafe_code
+  )]
   unsafe {
     for (idx, value_ptr) in (&mut *array.as_mut_ptr()).iter_mut().enumerate() {
       core::ptr::write(value_ptr, cb(idx)?);

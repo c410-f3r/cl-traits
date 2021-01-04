@@ -15,11 +15,11 @@ impl<T, const N: usize> Storage for [T; N] {
   type Item = T;
 }
 
-impl<'a, T> Storage for &'a [T] {
+impl<T> Storage for &'_ [T] {
   type Item = T;
 }
 
-impl<'a, T> Storage for &'a mut [T] {
+impl<T> Storage for &'_ mut [T] {
   type Item = T;
 }
 

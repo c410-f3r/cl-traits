@@ -33,7 +33,7 @@ impl<T, const N: usize> CapacityUpperBound for [T; N] {
 /// let structure = cl_traits::doc_tests::slice();
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&structure), 3);
 /// ```
-impl<'a, T> CapacityUpperBound for &'a [T] {
+impl<T> CapacityUpperBound for &'_ [T] {
   #[inline]
   fn capacity_upper_bound(&self) -> usize {
     self.len()
@@ -43,7 +43,7 @@ impl<'a, T> CapacityUpperBound for &'a [T] {
 /// ```rust
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&&mut [1, 2, 3][..]), 3);
 /// ```
-impl<'a, T> CapacityUpperBound for &'a mut [T] {
+impl<T> CapacityUpperBound for &'_ mut [T] {
   #[inline]
   fn capacity_upper_bound(&self) -> usize {
     self.len()

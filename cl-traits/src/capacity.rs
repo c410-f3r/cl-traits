@@ -33,7 +33,7 @@ impl<T, const N: usize> Capacity for [T; N] {
 /// let structure = cl_traits::doc_tests::slice();
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
-impl<'a, T> Capacity for &'a [T] {
+impl<T> Capacity for &'_ [T] {
   #[inline]
   fn capacity(&self) -> usize {
     self.len()
@@ -43,7 +43,7 @@ impl<'a, T> Capacity for &'a [T] {
 /// ```rust
 /// assert_eq!(cl_traits::Length::length(&&mut [1, 2, 3][..]), 3);
 /// ```
-impl<'a, T> Capacity for &'a mut [T] {
+impl<T> Capacity for &'_ mut [T] {
   #[inline]
   fn capacity(&self) -> usize {
     self.len()

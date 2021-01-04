@@ -28,7 +28,7 @@ impl<T> Length for Option<T> {
 /// let structure = cl_traits::doc_tests::slice();
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
-impl<'a, T> Length for &'a [T] {
+impl<T> Length for &'_ [T] {
   #[inline]
   fn length(&self) -> usize {
     self.len()
@@ -38,7 +38,7 @@ impl<'a, T> Length for &'a [T] {
 /// ```rust
 /// assert_eq!(cl_traits::Length::length(&&mut [1, 2, 3][..]), 3);
 /// ```
-impl<'a, T> Length for &'a mut [T] {
+impl<T> Length for &'_ mut [T] {
   #[inline]
   fn length(&self) -> usize {
     self.len()

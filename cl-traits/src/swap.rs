@@ -45,7 +45,7 @@ impl<T, const N: usize> Swap for [T; N] {
 /// assert_eq!(structure.get(0), Some(&3));
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
-impl<'a, T> Swap for &'a mut [T] {
+impl<T> Swap for &'_ mut [T] {
   type Input = [usize; 2];
   type Output = Result<(), ()>;
 
