@@ -59,12 +59,9 @@ impl<T> Push for Vec<T> {
 /// assert_eq!(structure.get(3), Some(&20));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Push for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
-  type Error = A::Item;
-  type Input = A::Item;
+impl<T, const N: usize> Push for arrayvec::ArrayVec<T, N> {
+  type Error = T;
+  type Input = T;
   type Ok = ();
 
   #[inline]

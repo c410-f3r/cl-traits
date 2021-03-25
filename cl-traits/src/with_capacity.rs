@@ -56,15 +56,12 @@ impl<T> WithCapacity for Vec<T> {
 }
 
 /// ```rust
-/// let structure: arrayvec::ArrayVec<[i32; 5]>;
+/// let structure: arrayvec::ArrayVec<i32, 5>;
 /// structure = cl_traits::WithCapacity::with_capacity(Default::default());
 /// assert_eq!(structure.capacity(), 5);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> WithCapacity for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> WithCapacity for arrayvec::ArrayVec<T, N> {
   type Input = usize;
 
   #[inline]

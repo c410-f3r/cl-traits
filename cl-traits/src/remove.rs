@@ -51,13 +51,10 @@ impl<T> Remove for Vec<T> {
 /// assert_eq!(structure.get(0), Some(&2));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Remove for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Remove for arrayvec::ArrayVec<T, N> {
   type Error = ();
   type Input = usize;
-  type Ok = A::Item;
+  type Ok = T;
 
   #[inline]
   fn remove(&mut self, idx: Self::Input) -> Result<Self::Ok, Self::Error> {

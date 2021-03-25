@@ -15,7 +15,7 @@ pub trait Clear {
 impl<T> Clear for Option<T> {
   #[inline]
   fn clear(&mut self) {
-    let _ = self.take();
+    *self = None;
   }
 }
 
@@ -28,7 +28,7 @@ impl<T> Clear for Option<T> {
 impl<T> Clear for Vec<T> {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }
 
@@ -38,13 +38,10 @@ impl<T> Clear for Vec<T> {
 /// assert_eq!(structure.len(), 0);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Clear for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Clear for arrayvec::ArrayVec<T, N> {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }
 
@@ -60,7 +57,7 @@ where
 {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }
 
@@ -73,7 +70,7 @@ where
 impl<T, const N: usize> Clear for staticvec::StaticVec<T, N> {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }
 
@@ -90,7 +87,7 @@ where
 {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }
 
@@ -107,6 +104,6 @@ where
 {
   #[inline]
   fn clear(&mut self) {
-    self.clear()
+    self.clear();
   }
 }

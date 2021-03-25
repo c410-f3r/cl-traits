@@ -79,10 +79,7 @@ impl<T> Swap for Vec<T> {
 /// assert_eq!(structure.get(2), Some(&1));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Swap for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Swap for arrayvec::ArrayVec<T, N> {
   type Input = [usize; 2];
   type Output = Result<(), ()>;
 

@@ -167,12 +167,9 @@ impl<T> Insert for Vec<T> {
 /// assert_eq!(structure.get(0), Some(&10));
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Insert for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
-  type Error = A::Item;
-  type Input = (usize, A::Item);
+impl<T, const N: usize> Insert for arrayvec::ArrayVec<T, N> {
+  type Error = T;
+  type Input = (usize, T);
   type Ok = ();
 
   #[inline]

@@ -67,13 +67,10 @@ impl<T> CapacityUpperBound for Vec<T> {
 /// assert_eq!(cl_traits::CapacityUpperBound::capacity_upper_bound(&structure), 5);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> CapacityUpperBound for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> CapacityUpperBound for arrayvec::ArrayVec<T, N> {
   #[inline]
   fn capacity_upper_bound(&self) -> usize {
-    A::CAPACITY
+    N
   }
 }
 

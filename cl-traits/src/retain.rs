@@ -43,7 +43,7 @@ impl<T> Retain for Vec<T> {
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(input)
+    self.retain(input);
   }
 }
 
@@ -53,16 +53,13 @@ impl<T> Retain for Vec<T> {
 /// assert_eq!(&structure[..], &[2]);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Retain for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
-  type Input = fn(&A::Item) -> bool;
+impl<T, const N: usize> Retain for arrayvec::ArrayVec<T, N> {
+  type Input = fn(&T) -> bool;
   type Output = ();
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(|i| input(i))
+    self.retain(|i| input(i));
   }
 }
 
@@ -81,7 +78,7 @@ where
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(|i| input(i))
+    self.retain(|i| input(i));
   }
 }
 
@@ -97,7 +94,7 @@ impl<T, const N: usize> Retain for staticvec::StaticVec<T, N> {
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(input)
+    self.retain(input);
   }
 }
 
@@ -117,7 +114,7 @@ where
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(input)
+    self.retain(input);
   }
 }
 
@@ -137,6 +134,6 @@ where
 
   #[inline]
   fn retain(&mut self, input: Self::Input) {
-    self.retain(input)
+    self.retain(input);
   }
 }

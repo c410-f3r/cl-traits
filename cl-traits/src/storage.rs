@@ -29,11 +29,8 @@ impl<T> Storage for Vec<T> {
 }
 
 #[cfg(feature = "with-arrayvec")]
-impl<A> Storage for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
-  type Item = A::Item;
+impl<T, const N: usize> Storage for arrayvec::ArrayVec<T, N> {
+  type Item = T;
 }
 
 #[cfg(feature = "with-smallvec")]

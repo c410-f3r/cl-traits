@@ -40,7 +40,7 @@ impl<T> Truncate for Vec<T> {
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }
 
@@ -50,16 +50,13 @@ impl<T> Truncate for Vec<T> {
 /// assert_eq!(structure.len(), 1);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Truncate for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Truncate for arrayvec::ArrayVec<T, N> {
   type Input = usize;
   type Output = ();
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }
 
@@ -78,7 +75,7 @@ where
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }
 
@@ -94,7 +91,7 @@ impl<T, const N: usize> Truncate for staticvec::StaticVec<T, N> {
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }
 
@@ -114,7 +111,7 @@ where
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }
 
@@ -134,6 +131,6 @@ where
 
   #[inline]
   fn truncate(&mut self, input: Self::Input) {
-    self.truncate(input)
+    self.truncate(input);
   }
 }

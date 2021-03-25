@@ -67,10 +67,7 @@ impl<T> Capacity for Vec<T> {
 /// assert_eq!(cl_traits::Capacity::capacity(&structure), 5);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Capacity for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Capacity for arrayvec::ArrayVec<T, N> {
   #[inline]
   fn capacity(&self) -> usize {
     self.capacity()

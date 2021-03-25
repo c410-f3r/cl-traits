@@ -73,10 +73,7 @@ impl<T> Length for Vec<T> {
 /// assert_eq!(cl_traits::Length::length(&structure), 3);
 /// ```
 #[cfg(feature = "with-arrayvec")]
-impl<A> Length for arrayvec::ArrayVec<A>
-where
-  A: arrayvec::Array,
-{
+impl<T, const N: usize> Length for arrayvec::ArrayVec<T, N> {
   #[inline]
   fn length(&self) -> usize {
     self.len()

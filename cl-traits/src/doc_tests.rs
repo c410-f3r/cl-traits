@@ -17,7 +17,7 @@ pub fn array() -> [i32; 3] {
 /// `ArrayVec` with three elements
 #[cfg(feature = "with-arrayvec")]
 #[inline]
-pub fn array_vec() -> arrayvec::ArrayVec<[i32; 5]> {
+pub fn array_vec() -> arrayvec::ArrayVec<i32, 5> {
   let mut vec = arrayvec::ArrayVec::new();
   vec.extend([1, 2, 3].iter().copied());
   vec
