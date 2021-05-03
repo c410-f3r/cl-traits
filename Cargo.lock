@@ -10,7 +10,7 @@ checksum = "5a2f58b0bb10c380af2b26e57212856b8c9a59e0925b4c20f4a174a49734eaf7"
 
 [[package]]
 name = "cl-traits"
-version = "5.0.0"
+version = "5.0.1"
 dependencies = [
  "arrayvec",
  "smallvec",
