@@ -10,7 +10,7 @@ export CARGO_TARGET_DIR="$($rt target-dir)"
 export RUST_BACKTRACE=1
 export RUSTFLAGS="$($rt rust-flags)"
 
-$rt clippy
+$rt clippy -Aclippy::default_numeric_fallback
 $rt rustfmt
 
 $rt test-generic cl-traits

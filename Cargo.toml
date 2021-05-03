@@ -3,3 +3,4 @@ members = [
     "cl-traits",
     "cl-traits-examples",
 ]
+resolver = "2"
