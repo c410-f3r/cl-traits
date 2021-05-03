@@ -20,7 +20,7 @@ jobs:
           components: clippy, rustfmt
           override: true
           profile: minimal
-          toolchain: stable
+          toolchain: nightly-2021-03-21
 
       - name: Cache cargo directories
         uses: actions/cache@v2
